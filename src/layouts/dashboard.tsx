@@ -9,7 +9,7 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="flex flex-col w-full overflow-hidden">
+      <main className="flex flex-col w-full h-screen overflow-hidden">
         <SidebarTrigger />
         {children}
       </main>

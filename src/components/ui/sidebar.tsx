@@ -312,8 +312,8 @@ const SidebarTrigger = React.forwardRef<
           </BreadcrumbItem>
           {parts.length > 0 &&
             parts.map((part) => (
-              <>
-                <BreadcrumbSeparator key={`${part}-seperator`} />
+              <React.Fragment key={`${part}-seperator`}>
+                <BreadcrumbSeparator />
                 <BreadcrumbItem key={`${part}-item`}>
                   <BreadcrumbLink
                     className="cursor-pointer"
@@ -322,7 +322,7 @@ const SidebarTrigger = React.forwardRef<
                     {AuthenticatedRoutesMetadata.get(`/${part}`)}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
-              </>
+              </React.Fragment>
             ))}
         </BreadcrumbList>
       </Breadcrumb>
