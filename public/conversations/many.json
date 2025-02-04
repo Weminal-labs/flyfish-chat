@@ -1,0 +1,42 @@
+[
+  {
+    "id": "dialog-1",
+    "sender": "user",
+    "message": "Hello, I'm a user"
+  },
+  {
+    "id": "dialog-2",
+    "sender": "ai",
+    "message": "Hello, Can I help you?"
+  },
+  {
+    "id": "dialog-3",
+    "sender": "user",
+    "message": "I want to know more about your services"
+  },
+  {
+    "id": "dialog-4",
+    "sender": "ai",
+    "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec faucibus ex. Morbi auctor ante diam, sit amet gravida quam imperdiet id. Pellentesque tincidunt ante odio. Aliquam ultricies tempor dui, feugiat vulputate metus lacinia id. Cras augue lorem, porttitor vitae sagittis et, porttitor id purus. Quisque nec facilisis est, non imperdiet purus. Nulla eu leo dolor. Morbi ornare ut arcu vel sodales. Praesent mattis dolor lorem, sed condimentum nisi sagittis ut. Sed et pellentesque tellus."
+  },
+  {
+    "id": "dialog-5",
+    "sender": "user",
+    "message": "Pellentesque cursus risus sed ante facilisis venenatis. Nunc gravida fringilla nunc id elementum. Vivamus ut sollicitudin augue. Pellentesque nisi urna, ornare ut erat eu, ornare vestibulum mauris. Sed aliquam blandit mauris non tincidunt. Ut non nisl dui. Proin vel nunc finibus, maximus velit at, posuere ex."
+  },
+  {
+    "id": "dialog-6",
+    "sender": "ai",
+    "message": "Nullam nulla nisl, pharetra at nibh at, laoreet porttitor purus. Fusce non elit justo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut tempus vel enim id tincidunt. Proin gravida lectus lectus, in sollicitudin enim accumsan sed. Donec dignissim sed lorem non ullamcorper. Etiam volutpat lobortis augue, vitae porttitor nisi. Aenean eu dapibus elit. Suspendisse convallis odio dolor, vel sollicitudin justo mattis ut."
+  },
+  {
+    "id": "dialog-7",
+    "sender": "user",
+    "message": "Cras gravida aliquet mi. Aliquam facilisis aliquam ipsum, vel rhoncus erat volutpat quis. Fusce in ante quam. Suspendisse faucibus ligula nec sollicitudin rhoncus. Interdum et malesuada fames ac ante ipsum primis in faucibus. In hac habitasse platea dictumst. Nullam mattis sem a risus malesuada consequat. Nulla vel condimentum sem. Vestibulum tristique id elit pharetra placerat."
+  },
+  {
+    "id": "dialog-8",
+    "sender": "ai",
+    "message": "In at justo eget neque accumsan commodo. Cras id pellentesque diam. Fusce sed ex vulputate, rutrum sapien eget, aliquam enim. Aenean nulla arcu, pretium vitae nunc in, auctor consectetur velit. Duis pellentesque dolor eget lacus porta convallis. Cras ut tellus a tellus dapibus iaculis. Curabitur facilisis sem eget nulla lacinia pulvinar. Proin ullamcorper, urna nec viverra interdum, metus dolor tincidunt turpis, iaculis laoreet dolor arcu porta odio. Integer volutpat nisl auctor, gravida eros a, viverra magna. Praesent nec dignissim eros. Nam malesuada, massa eu molestie dignissim, nunc sem congue lorem, vel hendrerit velit augue vitae ante. Nulla dolor elit, efficitur id scelerisque vel, finibus sit amet dolor. Nunc fringilla mattis enim sit amet interdum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."
+  }
+]
