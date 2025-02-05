@@ -1,3 +1,13 @@
+export type UResponseStatus = "RESPONDING" | "WAITING" | "DONE";
+
+export type DialogType = {
+  id: string;
+  sender: string;
+  message: string;
+  isBeingGenerated?: boolean;
+};
+
 export type ConversationType = {
-  dialogs: Array<any>;
+  responseStatus: UResponseStatus;
+  dialogs: Array<DialogType>;
 };
