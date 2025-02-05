@@ -17,6 +17,7 @@ import Recommendations from "./recommendations";
 import MDContent from "./markdown";
 
 // Import objects
+import { AtomaAPI } from "src/objects/atoma/api";
 import { ConversationAPI } from "src/objects/conversation/api";
 
 // Import state
@@ -216,8 +217,16 @@ export default function ConversationSection(props: ConversationSectionProps) {
   const { setDialogs } = useConversation();
 
   React.useEffect(() => {
-    ConversationAPI.getConversationDialogs().then((dialogs) => {
+    Promise.all([
+      ConversationAPI.getConversationDialogs(),
+      AtomaAPI.listModels(),
+    ]).then((values) => {
+      const [dialogs, models] = values;
+
+      // Set dialog
       setDialogs(dialogs);
+      console.log("Dialogs:", dialogs);
+      console.log("Models:", models);
     });
   }, []);
 

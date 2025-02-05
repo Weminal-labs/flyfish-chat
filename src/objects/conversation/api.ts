@@ -13,8 +13,8 @@ export class ConversationAPI {
     try {
       const response = await api.get("/conversations/many.json");
       return response.data as any;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      console.error(error.message);
     }
   }
 }
