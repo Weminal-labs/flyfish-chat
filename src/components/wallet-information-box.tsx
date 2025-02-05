@@ -21,10 +21,12 @@ import {
 
 // Import hooks
 // import { useAuth } from "src/hooks/use-auth";
-import { addressEllipsis } from "src/utils/number";
 
 // Import objects
 // import { UserUtils } from "src/objects/user/utils";
+
+// Import utils
+import { WalletUtils } from "src/utils/wallet";
 
 export default function WalletInformationBox() {
   // Get access to the wallet
@@ -50,7 +52,6 @@ export default function WalletInformationBox() {
               {wallet.status === "connected" && (
                 <ChevronsUpDown className="ml-auto size-4" />
               )}
-
             </SidebarMenuButton>
           </DropdownMenuTrigger>
 
@@ -67,7 +68,10 @@ export default function WalletInformationBox() {
                     <span className="truncate font-semibold">
                       {wallet?.account && (
                         <div>
-                          <p>Account: {addressEllipsis(wallet.account.address)}</p>
+                          <p>
+                            Account:{" "}
+                            {WalletUtils.censorAddress(wallet.account.address)}
+                          </p>
                         </div>
                       )}
                     </span>

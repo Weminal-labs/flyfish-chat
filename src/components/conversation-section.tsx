@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import Recommendation from "./recommendation";
+import Recommendations from "./recommendations";
 import MDContent from "./markdown";
 
 // Import objects
@@ -21,25 +21,6 @@ import { ConversationAPI } from "src/objects/conversation/api";
 
 // Import state
 import { useConversation } from "src/states/conversation";
-
-const reommendations = [
-  {
-    id: "recommendation-1",
-    title: "Recommendation 1",
-  },
-  {
-    id: "recommendation-2",
-    title: "Recommendation 2",
-  },
-  {
-    id: "recommendation-3",
-    title: "Recommendation 3",
-  },
-  {
-    id: "recommendation-4",
-    title: "Recommendation 4",
-  },
-];
 
 type RecommendationsBoxProps = {};
 type ConversationDialogProps = {
@@ -58,11 +39,7 @@ function RecommendationsBox(props: RecommendationsBoxProps) {
       <div>
         <h1 className="font-bold text-2xl">How can I help you?</h1>
       </div>
-      <div className="grid grid-cols-2 gap-2">
-        {reommendations.map((recommendation) => (
-          <Recommendation key={recommendation.id} />
-        ))}
-      </div>
+      <Recommendations />
     </div>
   );
 }
