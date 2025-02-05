@@ -105,7 +105,7 @@ export class API {
    */
   async get<ResponseData>(path: string, config?: AxiosRequestConfig) {
     try {
-      const response = await this._http.get<Response<ResponseData>>(
+      const response = await this._http.get<ResponseData>(
         StringUtils.formatURL(path),
         config
       );
@@ -127,7 +127,7 @@ export class API {
     config?: AxiosRequestConfig
   ) {
     try {
-      const response = await this._http.post<Response<ResponseData>>(
+      const response = await this._http.post<ResponseData>(
         StringUtils.formatURL(path),
         data,
         config
@@ -151,7 +151,7 @@ export class API {
     config?: AxiosRequestConfig
   ) {
     try {
-      const response = await this._http.put<Response<ResponseData>>(
+      const response = await this._http.put<ResponseData>(
         StringUtils.formatURL(path),
         data,
         config
@@ -175,7 +175,7 @@ export class API {
     config?: AxiosRequestConfig
   ) {
     try {
-      const response = await this._http.patch<Response<ResponseData>>(
+      const response = await this._http.patch<ResponseData>(
         StringUtils.formatURL(path),
         data,
         config
@@ -195,7 +195,7 @@ export class API {
    */
   async delete<ResponseData>(path: string, config?: AxiosRequestConfig) {
     try {
-      const response = await this._http.delete<Response<ResponseData>>(
+      const response = await this._http.delete<ResponseData>(
         StringUtils.formatURL(path),
         config
       );
