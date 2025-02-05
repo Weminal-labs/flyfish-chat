@@ -199,6 +199,12 @@ function ConversationController(props: ConversationControllerProps) {
       FlyFishAPI.askBot(userDialog.message).then((data) => {
         if (!data) return;
 
+        // Frontend gets response from AI, there are many steps to do:
+        // 1. Create dialog for AI (shouldn't replace).
+        // 2. Process Reasoning by add it to dialog (I can replace this step).
+        // 3. Update response status to DONE (shouldn't replace).
+        // 4. Create a new timeout for final change (shouldn't replace).
+
         // To do: create dialog for AI
         const aiDialog = ConversationUtils.createDialog(
           data.text,
