@@ -7,6 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { CopyButton } from "./copy-button";
+import { ScrollArea } from "./ui/scroll-area";
 import {
   Tooltip,
   TooltipContent,
@@ -139,14 +140,16 @@ function ConversationDialogs(props: ConversationDialogsProps) {
   const dialogs = conversation.dialogs;
 
   return (
-    <div
+    <ScrollArea
       ref={containerRef}
-      className="flex flex-col flex-1 overflow-y-auto pb-6"
+      className="max-w-[860px] flex flex-col flex-1 mx-auto pb-6"
     >
-      {dialogs.map((dialog, index) => (
-        <ConversationDialog key={index} data={dialog} />
-      ))}
-    </div>
+      <div className="px-6">
+        {dialogs.map((dialog, index) => (
+          <ConversationDialog key={index} data={dialog} />
+        ))}
+      </div>
+    </ScrollArea>
   );
 }
 
@@ -281,12 +284,12 @@ function ConversationController(props: ConversationControllerProps) {
   }, [textAreaInputRef.current]);
 
   return (
-    <div className="sticky bottom-0 w-full max-w-[960px] mx-auto border rounded-lg flex items-end px-3 py-2 bg-gray-100 hover:ring-2">
+    <div className="sticky bottom-0 w-full max-w-[840px] mx-auto border rounded-lg flex items-end px-3 py-2 bg-gray-100 hover:ring-2">
       <Textarea
         ref={textAreaInputRef}
         disabled={conversation.responseStatus !== "WAITING"}
         className="bg-transparent max-h-[156px] border-none shadow-none focus-visible:ring-0 resize-none"
-        placeholder="Start conversation with Marine Mind..."
+        placeholder="Start conversation with flyfish..."
         onKeyDown={handleKeyDownEvent}
         onInput={handleInputEvent}
         onFocus={handleFocusEvent}
@@ -324,7 +327,7 @@ export default function ConversationSection(props: ConversationSectionProps) {
   }, []);
 
   return (
-    <section className="w-full flex flex-col flex-1 px-3 py-2 overflow-hidden">
+    <section className="w-full max-h-[calc(100dvh-28px)] max-w-[860px] flex flex-col flex-1 px-3 py-2">
       <RecommendationsBox />
       <ConversationDialogs />
       <ConversationController />
