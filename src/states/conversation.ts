@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 // Import types
-import {
+import type {
   UResponseStatus,
   DialogType,
   ConversationType,
@@ -31,106 +31,106 @@ const initialState: ConversationState = {
   history: [],
 };
 
-export const useConversation = create<ConversationState & ConversationActions>(
-  (set) => {
-    return {
-      ...initialState,
-      setConversation(conversation: ConversationType) {
-        set((state) => ({
+export const useConversationState = create<
+  ConversationState & ConversationActions
+>((set) => {
+  return {
+    ...initialState,
+    setConversation(conversation: ConversationType) {
+      set((state) => ({
+        ...state,
+        conversation,
+      }));
+    },
+    setDialogs(dialogs: Array<DialogType>) {
+      set((state) => {
+        const conversation = state.conversation || {
+          ...initialState.conversation,
+        };
+
+        return {
           ...state,
-          conversation,
-        }));
-      },
-      setDialogs(dialogs: Array<DialogType>) {
-        set((state) => {
-          const conversation = state.conversation || {
-            ...initialState.conversation,
-          };
+          conversation: {
+            ...conversation,
+            dialogs,
+          },
+        };
+      });
+    },
+    addDialog(dialog: DialogType) {
+      set((state) => {
+        const conversation = state.conversation || {
+          ...initialState.conversation,
+        };
 
-          return {
-            ...state,
-            conversation: {
-              ...conversation,
-              dialogs,
-            },
-          };
-        });
-      },
-      addDialog(dialog: DialogType) {
-        set((state) => {
-          const conversation = state.conversation || {
-            ...initialState.conversation,
-          };
-
-          return {
-            ...state,
-            conversation: {
-              ...conversation,
-              dialogs: conversation.dialogs.concat(dialog),
-            },
-          };
-        });
-      },
-      addDialogs(dialogs: Array<DialogType>) {
-        set((state) => {
-          const conversation = state.conversation || {
-            ...initialState.conversation,
-          };
-
-          return {
-            ...state,
-            conversation: {
-              ...conversation,
-              dialogs: conversation.dialogs.concat(dialogs),
-            },
-          };
-        });
-      },
-      removeLastDialog() {
-        set((state) => {
-          if (!state.conversation) return { ...state };
-
-          const dialogs = state.conversation.dialogs;
-
-          // If dialogs aren't null
-          if (dialogs.length > 0) {
-            dialogs.pop();
-          }
-
-          return {
-            ...state,
-            conversation: {
-              ...state.conversation,
-              dialogs: dialogs,
-            },
-          };
-        });
-      },
-      setConversationResponseStatus(status: UResponseStatus) {
-        set((state) => {
-          if (!state.conversation) return { ...state };
-
-          return {
-            ...state,
-            conversation: {
-              ...state.conversation,
-              responseStatus: status,
-            },
-          };
-        });
-      },
-      setHistory(history: Array<any>) {
-        set((state) => ({
+        return {
           ...state,
-          history,
-        }));
-      },
-      reset() {
-        set((state) => ({
+          conversation: {
+            ...conversation,
+            dialogs: conversation.dialogs.concat(dialog),
+          },
+        };
+      });
+    },
+    addDialogs(dialogs: Array<DialogType>) {
+      set((state) => {
+        const conversation = state.conversation || {
+          ...initialState.conversation,
+        };
+
+        return {
           ...state,
-          ...initialState,
-        }));
-      },
-    };
-  }
-);
+          conversation: {
+            ...conversation,
+            dialogs: conversation.dialogs.concat(dialogs),
+          },
+        };
+      });
+    },
+    removeLastDialog() {
+      set((state) => {
+        if (!state.conversation) return { ...state };
+
+        const dialogs = state.conversation.dialogs;
+
+        // If dialogs aren't null
+        if (dialogs.length > 0) {
+          dialogs.pop();
+        }
+
+        return {
+          ...state,
+          conversation: {
+            ...state.conversation,
+            dialogs: dialogs,
+          },
+        };
+      });
+    },
+    setConversationResponseStatus(status: UResponseStatus) {
+      set((state) => {
+        if (!state.conversation) return { ...state };
+
+        return {
+          ...state,
+          conversation: {
+            ...state.conversation,
+            responseStatus: status,
+          },
+        };
+      });
+    },
+    setHistory(history: Array<any>) {
+      set((state) => ({
+        ...state,
+        history,
+      }));
+    },
+    reset() {
+      set((state) => ({
+        ...state,
+        ...initialState,
+      }));
+    },
+  };
+});

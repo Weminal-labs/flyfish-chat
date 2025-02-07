@@ -12,7 +12,7 @@ const api = new API({
   baseURL: import.meta.env.VITE_FLYFISH_BASE_URL,
 });
 
-export class FlyFishAPI {
+export class ConversationAPI {
   /**
    * Use to get conversation dialogs
    * @returns

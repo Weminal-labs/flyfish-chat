@@ -1,0 +1,302 @@
+[
+  {
+    "title": "Artificial Intelligence Fundamentals",
+    "description": "Exploring the theory and practice of machines mimicking human intelligence.",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Core Concepts",
+        "topics": [
+          {
+            "id": "101",
+            "title": "Machine Learning Basics",
+            "content": "Algorithms that improve automatically through experience.",
+            "references": [
+              {
+                "type": "research-paper",
+                "title": "Deep Learning in Neural Networks",
+                "url": "https://example.com/ai-paper"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "Ethics in AI",
+            "content": "Addressing bias and societal impact of intelligent systems.",
+            "references": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Blockchain Technology",
+    "description": "Decentralized ledger systems enabling secure peer-to-peer transactions.",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Fundamentals",
+        "topics": [
+          {
+            "id": "101",
+            "title": "Cryptographic Hashing",
+            "content": "Securing data through mathematical fingerprinting.",
+            "references": [
+              {
+                "type": "video",
+                "title": "Blockchain Explained",
+                "url": "https://example.com/blockchain-101"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "Smart Contracts",
+            "content": "Self-executing agreements on blockchain networks.",
+            "references": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Quantum Computing",
+    "description": "Harnessing quantum mechanics for exponential computational power.",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Principles",
+        "topics": [
+          {
+            "id": "101",
+            "title": "Qubits vs Classical Bits",
+            "content": "Understanding superposition and quantum states.",
+            "references": [
+              {
+                "type": "article",
+                "title": "Quantum Supremacy Achieved",
+                "url": "https://example.com/quantum-breakthrough"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "Quantum Algorithms",
+            "content": "Shor's algorithm for prime factorization.",
+            "references": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Cybersecurity Essentials",
+    "description": "Protecting systems and data from digital attacks.",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Threat Landscape",
+        "topics": [
+          {
+            "id": "101",
+            "title": "Phishing Techniques",
+            "content": "Identifying and preventing social engineering attacks.",
+            "references": [
+              {
+                "type": "case-study",
+                "title": "Major Data Breach Analysis",
+                "url": "https://example.com/cyber-case"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "Encryption Standards",
+            "content": "AES-256 and end-to-end encryption protocols.",
+            "references": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Edge Computing",
+    "description": "Processing data closer to the source rather than centralized cloud.",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Architecture",
+        "topics": [
+          {
+            "id": "101",
+            "title": "Fog Computing",
+            "content": "Distributed computing infrastructure patterns.",
+            "references": [
+              {
+                "type": "whitepaper",
+                "title": "5G and Edge Synergy",
+                "url": "https://example.com/edge-research"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "Latency Optimization",
+            "content": "Reducing response times in IoT networks.",
+            "references": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Internet of Things (IoT)",
+    "description": "Connecting everyday devices to the internet for smarter functionality.",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Basics",
+        "topics": [
+          {
+            "id": "101",
+            "title": "What is IoT?",
+            "content": "A network of physical objects embedded with sensors and software.",
+            "references": [
+              {
+                "type": "article",
+                "title": "The Future of IoT",
+                "url": "https://example.com/iot-intro"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "IoT Applications",
+            "content": "Smart homes, wearables, and industrial automation.",
+            "references": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Augmented Reality (AR)",
+    "description": "Overlaying digital content onto the real world for enhanced experiences.",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Core Concepts",
+        "topics": [
+          {
+            "id": "101",
+            "title": "AR vs VR",
+            "content": "Understanding the differences between augmented and virtual reality.",
+            "references": [
+              {
+                "type": "video",
+                "title": "AR Explained",
+                "url": "https://example.com/ar-vs-vr"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "AR in Gaming",
+            "content": "How AR is transforming interactive entertainment.",
+            "references": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "DevOps Practices",
+    "description": "Bridging development and operations for faster software delivery.",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Fundamentals",
+        "topics": [
+          {
+            "id": "101",
+            "title": "Continuous Integration",
+            "content": "Automating code integration and testing processes.",
+            "references": [
+              {
+                "type": "article",
+                "title": "CI/CD Pipelines",
+                "url": "https://example.com/devops-ci"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "Infrastructure as Code",
+            "content": "Managing infrastructure through code and automation.",
+            "references": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "5G Networks",
+    "description": "The next generation of wireless technology for faster connectivity.",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Technology Overview",
+        "topics": [
+          {
+            "id": "101",
+            "title": "What is 5G?",
+            "content": "High-speed, low-latency wireless communication.",
+            "references": [
+              {
+                "type": "whitepaper",
+                "title": "5G Deployment Strategies",
+                "url": "https://example.com/5g-overview"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "5G Use Cases",
+            "content": "Autonomous vehicles, smart cities, and remote surgery.",
+            "references": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Robotics Engineering",
+    "description": "Designing and building robots for various applications.",
+    "categories": [
+      {
+        "id": 1,
+        "name": "Introduction",
+        "topics": [
+          {
+            "id": "101",
+            "title": "Types of Robots",
+            "content": "Industrial, service, and autonomous robots.",
+            "references": [
+              {
+                "type": "article",
+                "title": "Robotics in Manufacturing",
+                "url": "https://example.com/robotics-types"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "Robotics in Healthcare",
+            "content": "Surgical robots and assistive technologies.",
+            "references": []
+          }
+        ]
+      }
+    ]
+  }
+]

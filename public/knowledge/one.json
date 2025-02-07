@@ -1,0 +1,30 @@
+{
+  "title": "Blockchain Fundamentals",
+  "description": "A structured knowledge base covering essential blockchain concepts",
+  "categories": [
+    {
+      "id": 1,
+      "name": "Introduction",
+      "topics": [
+        {
+          "id": "101",
+          "title": "What is blockchain?",
+          "content": "Blockchain is a decentralized and distributed ledger technology used to securely record transactions.",
+          "references": [
+            {
+              "type": "article",
+              "title": "Understanding Blockchain Technology",
+              "url": "https://example.com/blockchain-intro"
+            }
+          ]
+        },
+        {
+          "id": "102",
+          "title": "History of Blockchain",
+          "content": "The concept of blockchain was first introduced in 2008 by Satoshi Nakamoto in the Bitcoin whitepaper.",
+          "references": []
+        }
+      ]
+    }
+  ]
+}
