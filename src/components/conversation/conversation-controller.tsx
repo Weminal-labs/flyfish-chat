@@ -1,24 +1,11 @@
 import React from "react";
-import cn from "classnames";
-import { Send, ThumbsUp, ThumbsDown, User } from "lucide-react";
+import { Send } from "lucide-react";
 
 // Import components
-import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
-import { CopyButton } from "./copy-button";
-import { ScrollArea } from "./ui/scroll-area";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
-import Recommendations from "./recommendations";
-import MDContent from "./markdown";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
 
 // Import objects
-import { AtomaAPI } from "src/objects/atoma/api";
 import { ConversationAPI } from "src/objects/conversation/api";
 import { ConversationUtils } from "src/objects/conversation/utils";
 import { ConversationConstants } from "src/objects/conversation/constant";
@@ -28,150 +15,11 @@ import { useConversationState } from "src/states/conversation";
 
 // Import types
 import type { DialogType } from "src/objects/conversation/types";
+import type { ConversationControllerProps } from "./types";
 
-type RecommendationsBoxProps = {};
-type ConversationDialogProps = {
-  data: any;
-};
-type ConversationDialogsProps = {};
-type ConversationControllerProps = {};
-export type ConversationSectionProps = {};
-
-function RecommendationsBox(props: RecommendationsBoxProps) {
-  const { conversation } = useConversationState();
-
-  if (conversation) return;
-  return (
-    <div className="flex flex-col flex-1 justify-center items-center">
-      <div>
-        <h1 className="font-bold text-2xl">How can I help you?</h1>
-      </div>
-      <Recommendations />
-    </div>
-  );
-}
-
-const ConversationDialog = React.forwardRef<
-  HTMLDivElement,
-  ConversationDialogProps
->(function (props: ConversationDialogProps, ref) {
-  {
-    const containerClassName =
-      "flex items-start w-full border rounded-lg px-2 py-3 mt-3";
-    const isUser = props.data.sender === "user";
-
-    return (
-      <div
-        ref={ref}
-        className="w-full max-w-[920px] mx-auto [&>div:first-child]:hover:ring-2"
-      >
-        <div
-          className={cn(
-            { [containerClassName]: isUser },
-            { [`${containerClassName} bg-slate-100`]: !isUser }
-          )}
-        >
-          <div className="w-1/12">
-            {isUser ? (
-              <Avatar className="flex justify-center items-center bg-slate-50">
-                <User />
-              </Avatar>
-            ) : (
-              <Avatar>
-                <AvatarImage src="/logo.svg" />
-                <AvatarFallback>AI</AvatarFallback>
-              </Avatar>
-            )}
-          </div>
-          <div className="w-11/12">
-            <MDContent>{props.data.message}</MDContent>
-          </div>
-          {/* Message controller */}
-        </div>
-        {!isUser && (
-          <div className="mt-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <CopyButton text={props.data.message} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <p>Copy</p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <ThumbsUp />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <p>Like</p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <ThumbsDown />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <p>Dislike</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        )}
-      </div>
-    );
-  }
-});
-
-function ConversationDialogs(props: ConversationDialogsProps) {
-  const { conversation } = useConversationState();
-
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-  const dialogRef = React.useRef<HTMLDivElement | null>(null);
-
-  // Auto scroll to bottom of chat
-  React.useEffect(() => {
-    if (dialogRef.current) {
-      dialogRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [
-    containerRef.current,
-    dialogRef.current,
-    conversation,
-    conversation?.dialogs.length,
-  ]);
-
-  if (!conversation) return;
-
-  const dialogs = conversation.dialogs;
-
-  return (
-    <ScrollArea
-      ref={containerRef}
-      className="max-w-[860px] flex flex-col flex-1 mx-auto pb-6"
-    >
-      <div className="px-6">
-        {dialogs.map((dialog, index) => (
-          <ConversationDialog
-            ref={index + 1 === dialogs.length ? dialogRef : null}
-            key={index}
-            data={dialog}
-          />
-        ))}
-      </div>
-    </ScrollArea>
-  );
-}
-
-function ConversationController(props: ConversationControllerProps) {
+export default function ConversationController(
+  props: ConversationControllerProps
+) {
   const {
     conversation,
     addDialog,
@@ -326,29 +174,5 @@ function ConversationController(props: ConversationControllerProps) {
         <Send />
       </Button>
     </div>
-  );
-}
-
-export default function ConversationSection(props: ConversationSectionProps) {
-  const { setDialogs } = useConversationState();
-
-  React.useEffect(() => {
-    Promise.all([
-      ConversationAPI.getConversationDialogs(),
-      AtomaAPI.listModels(),
-    ]).then((values) => {
-      const [dialogs, models] = values;
-
-      // Set dialog
-      setDialogs(dialogs);
-    });
-  }, []);
-
-  return (
-    <section className="w-full max-h-[calc(100dvh-28px)] max-w-[860px] flex flex-col flex-1 px-3 py-2">
-      <RecommendationsBox />
-      <ConversationDialogs />
-      <ConversationController />
-    </section>
   );
 }

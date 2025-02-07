@@ -14,6 +14,8 @@ export type DialogType = {
 };
 
 export type ConversationType = {
+  doesFirstRender: boolean;
+  doesFirstFetch: boolean;
   responseStatus: UResponseStatus;
   dialogs: Array<DialogType>;
 };
