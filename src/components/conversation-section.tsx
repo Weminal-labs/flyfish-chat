@@ -19,12 +19,12 @@ import MDContent from "./markdown";
 
 // Import objects
 import { AtomaAPI } from "src/objects/atoma/api";
-import { FlyFishAPI } from "src/objects/fly-fish/api";
+import { ConversationAPI } from "src/objects/conversation/api";
 import { ConversationUtils } from "src/objects/conversation/utils";
 import { ConversationConstants } from "src/objects/conversation/constant";
 
 // Import state
-import { useConversation } from "src/states/conversation";
+import { useConversationState } from "src/states/conversation";
 
 // Import types
 import type { DialogType } from "src/objects/conversation/types";
@@ -38,7 +38,7 @@ type ConversationControllerProps = {};
 export type ConversationSectionProps = {};
 
 function RecommendationsBox(props: RecommendationsBoxProps) {
-  const { conversation } = useConversation();
+  const { conversation } = useConversationState();
 
   if (conversation) return;
   return (
@@ -51,89 +51,103 @@ function RecommendationsBox(props: RecommendationsBoxProps) {
   );
 }
 
-function ConversationDialog(props: ConversationDialogProps) {
-  const containerClassName =
-    "flex items-start w-full border rounded-lg px-2 py-3 mt-3";
-  const isUser = props.data.sender === "user";
+const ConversationDialog = React.forwardRef<
+  HTMLDivElement,
+  ConversationDialogProps
+>(function (props: ConversationDialogProps, ref) {
+  {
+    const containerClassName =
+      "flex items-start w-full border rounded-lg px-2 py-3 mt-3";
+    const isUser = props.data.sender === "user";
 
-  return (
-    <div className="w-full max-w-[920px] mx-auto [&>div:first-child]:hover:ring-2">
+    return (
       <div
-        className={cn(
-          { [containerClassName]: isUser },
-          { [`${containerClassName} bg-slate-100`]: !isUser }
-        )}
+        ref={ref}
+        className="w-full max-w-[920px] mx-auto [&>div:first-child]:hover:ring-2"
       >
-        <div className="w-1/12">
-          {isUser ? (
-            <Avatar className="flex justify-center items-center bg-slate-50">
-              <User />
-            </Avatar>
-          ) : (
-            <Avatar>
-              <AvatarImage src="/logo.svg" />
-              <AvatarFallback>AI</AvatarFallback>
-            </Avatar>
+        <div
+          className={cn(
+            { [containerClassName]: isUser },
+            { [`${containerClassName} bg-slate-100`]: !isUser }
           )}
+        >
+          <div className="w-1/12">
+            {isUser ? (
+              <Avatar className="flex justify-center items-center bg-slate-50">
+                <User />
+              </Avatar>
+            ) : (
+              <Avatar>
+                <AvatarImage src="/logo.svg" />
+                <AvatarFallback>AI</AvatarFallback>
+              </Avatar>
+            )}
+          </div>
+          <div className="w-11/12">
+            <MDContent>{props.data.message}</MDContent>
+          </div>
+          {/* Message controller */}
         </div>
-        <div className="w-11/12">
-          <MDContent>{props.data.message}</MDContent>
-        </div>
-        {/* Message controller */}
+        {!isUser && (
+          <div className="mt-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <CopyButton text={props.data.message} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>Copy</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <ThumbsUp />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>Like</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <ThumbsDown />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>Dislike</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        )}
       </div>
-      {!isUser && (
-        <div className="mt-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <CopyButton text={props.data.message} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>Copy</p>
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <ThumbsUp />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>Like</p>
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <ThumbsDown />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>Dislike</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      )}
-    </div>
-  );
-}
+    );
+  }
+});
 
 function ConversationDialogs(props: ConversationDialogsProps) {
-  const { conversation } = useConversation();
+  const { conversation } = useConversationState();
 
   const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const dialogRef = React.useRef<HTMLDivElement | null>(null);
 
   // Auto scroll to bottom of chat
   React.useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
+    if (dialogRef.current) {
+      dialogRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [containerRef.current, conversation, conversation?.dialogs.length]);
+  }, [
+    containerRef.current,
+    dialogRef.current,
+    conversation,
+    conversation?.dialogs.length,
+  ]);
 
   if (!conversation) return;
 
@@ -146,7 +160,11 @@ function ConversationDialogs(props: ConversationDialogsProps) {
     >
       <div className="px-6">
         {dialogs.map((dialog, index) => (
-          <ConversationDialog key={index} data={dialog} />
+          <ConversationDialog
+            ref={index + 1 === dialogs.length ? dialogRef : null}
+            key={index}
+            data={dialog}
+          />
         ))}
       </div>
     </ScrollArea>
@@ -160,7 +178,7 @@ function ConversationController(props: ConversationControllerProps) {
     addDialogs,
     removeLastDialog,
     setConversationResponseStatus,
-  } = useConversation();
+  } = useConversationState();
 
   const textAreaInputRef = React.useRef<HTMLTextAreaElement | null>(null);
 
@@ -199,7 +217,7 @@ function ConversationController(props: ConversationControllerProps) {
       if (textAreaInputRef.current) textAreaInputRef.current.value = "";
 
       // Send request
-      FlyFishAPI.askBot(userDialog.message).then((data) => {
+      ConversationAPI.askBot(userDialog.message).then((data) => {
         if (!data) return;
 
         // Frontend gets response from AI, there are many steps to do:
@@ -312,11 +330,11 @@ function ConversationController(props: ConversationControllerProps) {
 }
 
 export default function ConversationSection(props: ConversationSectionProps) {
-  const { setDialogs } = useConversation();
+  const { setDialogs } = useConversationState();
 
   React.useEffect(() => {
     Promise.all([
-      FlyFishAPI.getConversationDialogs(),
+      ConversationAPI.getConversationDialogs(),
       AtomaAPI.listModels(),
     ]).then((values) => {
       const [dialogs, models] = values;
