@@ -14,6 +14,8 @@ type ConversationState = {
 
 type ConversationActions = {
   setConversation(conversation: ConversationType): void;
+  setDoesFirstFetch(status?: boolean): void;
+  setDoesFirstRender(status?: boolean): void;
   setDialogs(dialogs: Array<DialogType>): void;
   setHistory(history: Array<any> | null): void;
   addDialog(dialog: DialogType): void;
@@ -25,6 +27,8 @@ type ConversationActions = {
 
 const initialState: ConversationState = {
   conversation: {
+    doesFirstRender: false,
+    doesFirstFetch: false,
     responseStatus: "WAITING",
     dialogs: [],
   },
@@ -36,6 +40,36 @@ export const useConversationState = create<
 >((set) => {
   return {
     ...initialState,
+    setDoesFirstFetch(status?: boolean) {
+      set((state) => {
+        const conversation = state.conversation || {
+          ...initialState.conversation,
+        };
+
+        return {
+          ...state,
+          conversation: {
+            ...conversation,
+            doesFirstFetch: Boolean(status),
+          },
+        };
+      });
+    },
+    setDoesFirstRender(status?: boolean) {
+      set((state) => {
+        const conversation = state.conversation || {
+          ...initialState.conversation,
+        };
+
+        return {
+          ...state,
+          conversation: {
+            ...conversation,
+            doesFirstRender: Boolean(status),
+          },
+        };
+      });
+    },
     setConversation(conversation: ConversationType) {
       set((state) => ({
         ...state,

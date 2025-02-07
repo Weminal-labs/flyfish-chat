@@ -1,5 +1,5 @@
 // Import components
-import ConversationSection from "src/components/conversation-section";
+import ConversationSection from "src/components/conversation/conversation-section";
 import Data from "src/components/data";
 
 export default function HomePage() {
