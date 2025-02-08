@@ -27,7 +27,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "src/components/ui/breadcrumb";
 
@@ -156,7 +155,7 @@ const SidebarProvider = React.forwardRef<
               } as React.CSSProperties
             }
             className={cn(
-              "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+              "group/sidebar-wrapper flex min-h-svh w-full",
               className
             )}
             ref={ref}
@@ -256,7 +255,7 @@ const Sidebar = React.forwardRef<
             // Adjust the padding for floating and inset variants.
             variant === "floating" || variant === "inset"
               ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
-              : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
+              : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=right]:border-l",
             className
           )}
           {...props}
@@ -285,7 +284,7 @@ const SidebarTrigger = React.forwardRef<
   const parts = location.pathname.split("/").filter((part) => part !== "");
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center border-b px-3 py-2 max-h-[45px]">
       <Button
         ref={ref}
         data-sidebar="trigger"
