@@ -23,18 +23,27 @@ const ConversationDialog = React.forwardRef<
   ConversationDialogProps
 >(function (props: ConversationDialogProps, ref) {
   {
+    const wrapperClassName =
+      "flex flex-col w-full max-w-[920px] mx-auto [&>div:first-child]:hover:ring-2";
     const containerClassName =
-      "flex items-start w-full border rounded-lg px-2 py-3 mt-3";
+      "flex items-start w-3/4 border rounded-lg px-2 py-3 mt-3";
     const isUser = props.data.sender === "user";
 
     return (
       <div
         ref={ref}
-        className="w-full max-w-[920px] mx-auto [&>div:first-child]:hover:ring-2"
+        className={cn(
+          {
+            [`${wrapperClassName} items-end`]: isUser,
+          },
+          { [`${wrapperClassName}`]: !isUser }
+        )}
       >
         <div
           className={cn(
-            { [containerClassName]: isUser },
+            {
+              [`${containerClassName} bg-white flex-row-reverse`]: isUser,
+            },
             { [`${containerClassName} bg-slate-100`]: !isUser }
           )}
         >

@@ -1,3 +1,4 @@
+import cn from "classnames";
 import { Link } from "react-router-dom";
 import { MessageCircle, Search, Settings } from "lucide-react";
 
@@ -36,10 +37,20 @@ const items = [
   },
 ];
 
+const sideBarClassName = cn([
+  "[&>div[data-sidebar=sidebar]]:border",
+  "[&>div[data-sidebar=sidebar]]:flex-1",
+  "[&>div[data-sidebar=sidebar]]:rounded-lg",
+]);
+
 export function AppSidebar() {
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader>
+    <Sidebar
+      className={`p-2 ${sideBarClassName}`}
+      variant="inset"
+      collapsible="icon"
+    >
+      <SidebarHeader className="border-b rounded-t-lg max-h-[45px]">
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8 rounded-lg">
             <AvatarImage src="/logo.svg" />

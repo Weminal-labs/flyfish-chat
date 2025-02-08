@@ -5,4 +5,6 @@ export type ConversationDialogProps = {
 };
 export type ConversationDialogsProps = {};
 export type ConversationControllerProps = {};
-export type ConversationSectionProps = {};
+export type ConversationSectionProps = {
+  className?: string;
+};

@@ -9,10 +9,12 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="flex flex-col w-full h-screen overflow-hidden">
-        <SidebarTrigger />
-        {children}
-      </main>
+      <div className="py-2 pe-2 w-full h-screen max-h-screen">
+        <main className="flex flex-col w-full border rounded-lg overflow-hidden bg-background/70 backdrop-blur-md">
+          <SidebarTrigger />
+          {children}
+        </main>
+      </div>
     </SidebarProvider>
   );
 }
