@@ -18,7 +18,9 @@ export type KnowledgeCategoryType = {
 };
 
 export type KnowledgeType = {
-  title: string;
-  description: string;
-  categories: Array<KnowledgeCategoryType>;
+  text: string;
+  authorFullname: string;
+  authorUsername: string;
+  authorImg: string;
+  url: string;
 };

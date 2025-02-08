@@ -61,17 +61,17 @@ function DataCard(props: DataCardProps) {
       }}
     >
       <div className="mb-3">
-        <h3 className="font-bold text-xl">{props.data.title}</h3>
-        <p>{props.data.description}</p>
+        <h3 className="font-bold text-xl">{props.data.authorFullname}</h3>
+        <p>{props.data.text}</p>
       </div>
-      <div>
+      {/* <div>
         <p className="font-bold">Categories</p>
         <div className="ms-3">
           {props.data.categories.map((category, index) => (
             <DataCategory key={index} data={category} />
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -84,7 +84,8 @@ export default function Data({ className }: DataProps) {
   React.useEffect(() => {
     KnowledgeAPI.getKnowledge().then((list) => setListKnowledge(list));
   }, []);
-
+  console.log(list);
+  [[], []];
   return (
     <div className={cn(_className, className)}>
       <div className="px-3 py-2 border-b">
@@ -102,9 +103,11 @@ export default function Data({ className }: DataProps) {
       ) : (
         <ScrollArea className="w-full [&>div[data-radix-scroll-area-viewport]]:max-h-[calc(100dvh-45px-16px-56px-12px)] px-3">
           <div className="px-6 mt-2">
-            {list.map((knowledge, index) => (
-              <DataCard key={index} data={knowledge} />
-            ))}
+            {list.map((knowledgeList, index) =>
+              knowledgeList.map((knowledge, id) => (
+                <DataCard key={index * 10 + id} data={knowledge} />
+              ))
+            )}
           </div>
         </ScrollArea>
       )}
