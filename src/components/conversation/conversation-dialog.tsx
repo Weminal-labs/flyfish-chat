@@ -23,10 +23,10 @@ const ConversationDialog = React.forwardRef<
   ConversationDialogProps
 >(function (props: ConversationDialogProps, ref) {
   {
-    const wrapperClassName =
-      "flex flex-col w-full max-w-[920px] mx-auto [&>div:first-child]:hover:ring-2";
-    const containerClassName =
-      "flex items-start w-3/4 border rounded-lg px-2 py-3 mt-3";
+    const wrapperClassName = "flex flex-col w-full max-w-[920px] mt-3";
+    const containerClassName = "flex justify-start items-start w-3/4";
+    const textContainerClassName =
+      "w-full border rounded-lg px-2 py-3 hover:ring-2";
     const isUser = props.data.sender === "user";
 
     return (
@@ -42,72 +42,79 @@ const ConversationDialog = React.forwardRef<
         <div
           className={cn(
             {
-              [`${containerClassName} bg-white flex-row-reverse`]: isUser,
+              [`${containerClassName} flex-row-reverse`]: isUser,
             },
-            { [`${containerClassName} bg-slate-100`]: !isUser }
+            { [`${containerClassName}`]: !isUser }
           )}
         >
           <div className="w-1/12">
             {isUser ? (
-              <Avatar className="flex justify-center items-center bg-slate-50">
+              <Avatar className="flex justify-center items-center bg-background ms-3">
                 <User />
               </Avatar>
             ) : (
-              <Avatar>
+              <Avatar className="me-3">
                 <AvatarImage src="/logo.svg" />
                 <AvatarFallback>AI</AvatarFallback>
               </Avatar>
             )}
           </div>
           <div className="w-11/12">
-            {props.hasAIWriterAnimation ? (
-              <AIWriter>
+            <div
+              className={cn(
+                {
+                  [`${textContainerClassName} bg-white`]: isUser,
+                },
+                { [`${textContainerClassName} bg-slate-50`]: !isUser }
+              )}
+            >
+              {props.hasAIWriterAnimation ? (
+                <AIWriter>
+                  <MDContent>{props.data.message}</MDContent>
+                </AIWriter>
+              ) : (
                 <MDContent>{props.data.message}</MDContent>
-              </AIWriter>
-            ) : (
-              <MDContent>{props.data.message}</MDContent>
+              )}
+            </div>
+            {/* Message controller */}
+            {!isUser && (
+              <div className="mt-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <CopyButton text={props.data.message} />
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>Copy</p>
+                    </TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <ThumbsUp />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>Like</p>
+                    </TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <ThumbsDown />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>Dislike</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             )}
           </div>
-          {/* Message controller */}
         </div>
-        {!isUser && (
-          <div className="mt-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <CopyButton text={props.data.message} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <p>Copy</p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <ThumbsUp />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <p>Like</p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <ThumbsDown />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <p>Dislike</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        )}
       </div>
     );
   }

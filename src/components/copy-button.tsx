@@ -26,7 +26,9 @@ export function CopyButton(props: CopyCodeButtonProps) {
 
   return (
     <CopyToClipboard text={props.text} onCopy={() => setIsCopy(true)}>
-      {isCopy ? <Check size={16} /> : <Copy size={16} />}
+      <Button variant="ghost" size="icon">
+        {isCopy ? <Check size={16} /> : <Copy size={16} />}
+      </Button>
     </CopyToClipboard>
   );
 }

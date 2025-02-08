@@ -19,27 +19,31 @@ import type { ConversationSectionProps } from "./types";
 export default function ConversationSection({
   className,
 }: ConversationSectionProps) {
-  const { setDialogs, setDoesFirstFetch } = useConversationState();
+  const { conversation, setDoesFirstFetch } = useConversationState();
 
   const _className =
     "relative max-h-[calc(100dvh-45px-16px)] flex flex-col flex-1 pb-2";
 
   React.useEffect(() => {
-    Promise.all([
-      ConversationAPI.getConversationDialogs(),
-      AtomaAPI.listModels(),
-    ]).then((values) => {
-      const [dialogs, models] = values;
-
-      // Set dialog
-      setDialogs(dialogs);
-      setDoesFirstFetch(true);
-    });
+    // Promise.all([
+    //   ConversationAPI.getConversationDialogs(),
+    //   AtomaAPI.listModels(),
+    // ]).then((values) => {
+    //   const [dialogs, models] = values;
+    //   // Set dialog
+    //   setDialogs(dialogs);
+    //   setDoesFirstFetch(true);
+    // });
+    setDoesFirstFetch(true);
   }, []);
 
   return (
-    <section className={cn(_className, className)}>
-      <div className="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <section
+      className={cn(_className, className, {
+        "h-screen": conversation.dialogs.length > 0,
+      })}
+    >
+      <div className="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] -z-10"></div>
       <RecommendationsBox />
       <ConversationDialogs />
       <ConversationController />

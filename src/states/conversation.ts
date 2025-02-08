@@ -161,8 +161,7 @@ export const useConversationState = create<
       }));
     },
     reset() {
-      set((state) => ({
-        ...state,
+      set(() => ({
         ...initialState,
       }));
     },

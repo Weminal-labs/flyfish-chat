@@ -17,11 +17,13 @@ const recommentItems = [
 const Recommendations: React.FC<RecommendationProps> = React.memo(
   ({ className = "" }) => {
     return (
-      <div className={`flex flex-wrap gap-4 p-4 max-w-[900px] ${className}`}>
+      <div
+        className={`flex justify-center flex-wrap gap-4 p-4 max-w-[900px] ${className}`}
+      >
         {recommentItems.map((item, index) => (
           <div
             key={index}
-            className="min-w-[400px] h-[80px] rounded-lg border border-gray-300 p-2 flex flex-col justify-center items-center gap-2 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
+            className="min-w-[400px] h-[80px] bg-background rounded-lg border border-gray-300 p-2 flex flex-col justify-center items-center gap-2 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
             onClick={() => alert(item.name)}
           >
             {/* Icon + Name */}
