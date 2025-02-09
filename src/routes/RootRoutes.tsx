@@ -23,6 +23,7 @@ import HomePage from "src/pages/home";
 
 // Import types
 import type { RouteObject } from "react-router-dom";
+import SwapPage from "src/components/web3/swap/swap-page";
 
 export const AuthenticatedRoutesMetadata = new Map([
   ["/", import.meta.env.VITE_APP_NAME],
@@ -66,9 +67,14 @@ const rootRoutes: Array<RouteObject> = [
         element: <HomePage />,
       },
       {
+        path: "/swap",
+        element: <SwapPage />,
+      },
+      {
         path: "/",
         element: <Navigate to="/conversation" replace />,
       },
+
     ],
   },
 ];
