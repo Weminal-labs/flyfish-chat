@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useWallet } from "@suiet/wallet-kit";
 import { Send } from "lucide-react";
 
@@ -20,168 +20,10 @@ import { ConversationUIUtils } from "./utils";
 // Import types
 import type { DialogType } from "src/objects/conversation/types";
 import type { ConversationControllerProps } from "./types";
+import { AIService } from "../../services/ai.service";
+import SwapModalAgent from '../web3/swap/swap-modal-agent';
 
 const inputPlaceHolder = "Start conversation with flyfish...";
-
-// export default function ConversationController(
-//   props: ConversationControllerProps
-// ) {
-//   const {
-//     conversation,
-//     addDialog,
-//     addDialogs,
-//     removeLastDialog,
-//     setConversationResponseStatus,
-//   } = useConversationState();
-
-//   const textAreaInputRef = React.useRef<HTMLTextAreaElement | null>(null);
-
-//   // Event handlers
-//   const {
-//     handleKeyDownEvent,
-//     handleInputEvent,
-//     handleSubmit,
-//     handleBlurEvent,
-//     handleFocusEvent,
-//   } = React.useMemo(() => {
-//     const _updateAIResponse = function (dialog: DialogType) {
-//       setConversationResponseStatus("WAITING");
-//       removeLastDialog();
-//       // Update dialog
-//       addDialog(dialog);
-//     };
-
-//     // Handle submit
-//     const handleSubmit = function (input: string) {
-//       const userDialog = ConversationUtils.createDialog(input);
-
-//       // Add placeholder for AI's Response
-//       const aiPlaceHolderDialog = ConversationUtils.createDialog(
-//         ConversationConstants.RespondingMessage,
-//         ConversationConstants.Senders.AI
-//       );
-//       aiPlaceHolderDialog.isBeingGenerated = true;
-
-//       // Update dialog
-//       addDialogs([userDialog, aiPlaceHolderDialog]);
-//       // Update response status
-//       setConversationResponseStatus("RESPONDING");
-
-//       // Clear data
-//       if (textAreaInputRef.current) textAreaInputRef.current.value = "";
-
-//       // Send request
-//       ConversationAPI.askBot(userDialog.message).then((data) => {
-//         if (!data) return;
-
-//         // Frontend gets response from AI, there are many steps to do:
-//         // 1. Create dialog for AI (shouldn't replace).
-//         // 2. Process Reasoning by add it to dialog (I can replace this step).
-//         // 3. Update response status to DONE (shouldn't replace).
-//         // 4. Create a new timeout for final change (shouldn't replace).
-
-//         // To do: create dialog for AI
-//         const aiDialog = ConversationUtils.createDialog(
-//           data.text,
-//           ConversationConstants.Senders.AI
-//         );
-
-//         // To do: create a log for reasoning
-
-//         // Update response status
-//         setConversationResponseStatus("DONE");
-
-//         // To do: after 50ms, update conversation response status
-//         // This timeout will allow program do anything else, other jobs.
-//         const timeout = setTimeout(() => {
-//           _updateAIResponse(aiDialog);
-//         }, 50);
-
-//         // clearTimeout(timeout);
-//       });
-//     };
-//     // Handle keydown event
-//     const handleKeyDownEvent = function (
-//       e: React.KeyboardEvent<HTMLTextAreaElement>
-//     ) {
-//       // Prevent add more lines on Enter key press
-//       if (e.key === "Enter" && !e.shiftKey) {
-//         e.preventDefault();
-
-//         const target = e.currentTarget as HTMLTextAreaElement;
-//         // Submit
-//         handleSubmit(target.value);
-//       }
-
-//       if (e.key === "Enter" && e.shiftKey) {
-//         e.currentTarget.value += "";
-//       }
-//     };
-//     // Handle input event
-//     const handleInputEvent = function (
-//       e: React.FormEvent<HTMLTextAreaElement>
-//     ) {
-//       const target = e.target as HTMLTextAreaElement;
-//       target.style.height = "60px";
-//       target.style.height = target.scrollHeight + "px";
-//     };
-//     // Handle focus event
-//     const handleFocusEvent = function (
-//       e: React.FocusEvent<HTMLTextAreaElement, Element>
-//     ) {
-//       const target = e.currentTarget as HTMLTextAreaElement;
-//       const parentElement = target.parentElement as HTMLDivElement;
-
-//       // Add focus ring when textarea is focused
-//       parentElement.classList.add("ring-2");
-//     };
-//     // Handle blur event
-//     const handleBlurEvent = function (
-//       e: React.FocusEvent<HTMLTextAreaElement, Element>
-//     ) {
-//       const target = e.currentTarget as HTMLTextAreaElement;
-//       const parentElement = target.parentElement as HTMLDivElement;
-
-//       // Remove focus ring when textarea is blurred
-//       parentElement.classList.remove("ring-2");
-//     };
-
-//     return {
-//       handleKeyDownEvent,
-//       handleInputEvent,
-//       handleSubmit,
-//       handleBlurEvent,
-//       handleFocusEvent,
-//     };
-//   }, [textAreaInputRef.current]);
-
-//   return (
-//     <div className="sticky bottom-0 w-full max-w-[840px] mx-auto border rounded-lg flex items-end px-3 py-2 bg-gray-100 hover:ring-2">
-//       <Textarea
-//         ref={textAreaInputRef}
-//         disabled={conversation.responseStatus !== "WAITING"}
-//         className="bg-transparent max-h-[156px] border-none shadow-none focus-visible:ring-0 resize-none"
-//         placeholder={inputPlaceHolder}
-//         onKeyDown={handleKeyDownEvent}
-//         onInput={handleInputEvent}
-//         onFocus={handleFocusEvent}
-//         onBlur={handleBlurEvent}
-//       />
-//       <Button
-//         disabled={conversation.responseStatus !== "WAITING"}
-//         onClick={() => {
-//           if (textAreaInputRef.current)
-//             handleSubmit(textAreaInputRef.current.value);
-//         }}
-//         variant="outline"
-//         className="ms-2"
-//         size="icon"
-//       >
-//         <Send />
-//       </Button>
-//     </div>
-//   );
-// }
 
 /**
  * Use to render a conversation controller with suggest feature in user input.
@@ -195,7 +37,14 @@ export default function ConversationController() {
     removeLastDialog,
     setConversationResponseStatus,
   } = useConversationState();
-  const { account } = useWallet();
+  const { account, address, signAndExecuteTransactionBlock } = useWallet();
+  const [showSwapModal, setShowSwapModal] = useState(false);
+  const [swapInfo, setSwapInfo] = useState<{
+    fromSymbol: string;
+    toSymbol: string;
+    amount: number;
+    txBytes?: string;
+  } | null>(null);
 
   const inputRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -242,7 +91,7 @@ export default function ConversationController() {
         if (suggestionContent.includes("{{WALLET ADDRESS}}")) {
           suggestionContent = suggestionContent.replace(
             "{{WALLET ADDRESS}}",
-            account?.address!
+            account?.address! 
           );
         }
 
@@ -320,7 +169,7 @@ export default function ConversationController() {
     };
 
     // Handle submit
-    const handleSubmit = function (target: HTMLDivElement) {
+    const handleSubmit = async function (target: HTMLDivElement) {
       const content = _getContent(target);
       const userDialog = ConversationUtils.createDialog(content);
 
@@ -336,41 +185,48 @@ export default function ConversationController() {
       // Update response status
       setConversationResponseStatus("RESPONDING");
 
-      // Clear data
+      // Clear input
       if (inputRef.current) {
         _clearAll(inputRef.current);
         inputRef.current.blur();
       }
 
-      // Send request
-      ConversationAPI.askBot(userDialog.message).then((data) => {
-        if (!data) return;
+      try {
+        // Gửi message tới AI Agent
+        const aiResponse = await AIService.sendMessage(content);
+        console.log("PHAP-AI-RESPONSE", aiResponse);
 
-        // Frontend gets response from AI, there are many steps to do:
-        // 1. Create dialog for AI (shouldn't replace).
-        // 2. Process Reasoning by add it to dialog (I can replace this step).
-        // 3. Update response status to DONE (shouldn't replace).
-        // 4. Create a new timeout for final change (shouldn't replace).
+        // Kiểm tra xem response có phải là swap action không  
+        if (AIService.isSwapAction(aiResponse)) {
+          const swapInfo = AIService.getSwapInfo(aiResponse);
+          console.log("PHAP-swap info", swapInfo);
+          if (swapInfo) {
+            console.log("PHAP-swap info", swapInfo);
+            setSwapInfo(swapInfo);
+            setShowSwapModal(true);
+          }
+        }
 
-        // To do: create dialog for AI
+        // Tạo dialog cho AI response
         const aiDialog = ConversationUtils.createDialog(
-          data.text,
+          aiResponse[0].text,
           ConversationConstants.Senders.AI
         );
-
-        // To do: create a log for reasoning
 
         // Update response status
         setConversationResponseStatus("DONE");
 
-        // To do: after 50ms, update conversation response status
-        // This timeout will allow program do anything else, other jobs.
-        const timeout = setTimeout(() => {
-          _updateAIResponse(aiDialog);
+        // Update AI response
+        setTimeout(() => {
+          setConversationResponseStatus("WAITING");
+          removeLastDialog();
+          addDialog(aiDialog);
         }, 50);
 
-        // clearTimeout(timeout);
-      });
+      } catch (error) {
+        console.error('Error sending message:', error);
+        setConversationResponseStatus("WAITING");
+      }
     };
     // Handle keydown event
     const handleKeyDownEvent = function (
@@ -488,28 +344,60 @@ export default function ConversationController() {
     }
   }, [inputRef.current, account?.address]);
 
+  // Handle swap transaction
+  const handleSwap = async (txBytes: string) => {
+    // try {
+    //   if (signAndExecuteTransactionBlock) {
+    //     const result = await signAndExecuteTransactionBlock({
+    //       transactionBlock: txBytes,
+    //     });
+    //     console.log('Swap transaction result:', result);
+    //     setShowSwapModal(false);
+    //   }
+    // } catch (error) {
+    //   console.error('Error executing swap:', error);
+    // }
+
+    console.log("PHAP-TX-BYTES", txBytes);
+  };
+
   return (
-    <div className="relative w-full max-w-[840px] mx-auto border rounded-lg flex items-end px-3 py-2 bg-gray-100 hover:ring-2">
-      <div
-        contentEditable={conversation.responseStatus === "WAITING"}
-        ref={inputRef}
-        className="w-full min-h-[60px] bg-transparent max-h-[156px] focus:outline-0"
-        onKeyDown={handleKeyDownEvent}
-        onInput={handleInputEvent}
-        onFocus={handleFocusEvent}
-        onBlur={handleBlurEvent}
-      />
-      <Button
-        disabled={conversation.responseStatus !== "WAITING"}
-        onClick={() => {
-          if (inputRef.current) handleSubmit(inputRef.current);
-        }}
-        variant="outline"
-        className="ms-2"
-        size="icon"
-      >
-        <Send />
-      </Button>
-    </div>
+    <>
+      <div className="relative w-full max-w-[840px] mx-auto border rounded-lg flex items-end px-3 py-2 bg-gray-100 hover:ring-2">
+        <div
+          contentEditable={conversation.responseStatus === "WAITING"}
+          ref={inputRef}
+          className="w-full min-h-[60px] bg-transparent max-h-[156px] focus:outline-0"
+          onKeyDown={handleKeyDownEvent}
+          onInput={handleInputEvent}
+          onFocus={handleFocusEvent}
+          onBlur={handleBlurEvent}
+        />
+        <Button
+          disabled={conversation.responseStatus !== "WAITING"}
+          onClick={() => {
+            if (inputRef.current) handleSubmit(inputRef.current);
+          }}
+          variant="outline"
+          className="ms-2"
+          size="icon"
+        >
+          <Send />
+        </Button>
+      </div>
+
+      {/* Swap Modal */}
+      {swapInfo && (
+        <SwapModalAgent
+          isOpen={showSwapModal}
+          onClose={() => setShowSwapModal(false)}
+          fromSymbol={swapInfo.fromSymbol}
+          toSymbol={swapInfo.toSymbol}
+          amount={swapInfo.amount}
+          txBytes={swapInfo.txBytes}
+          onSwap={handleSwap}
+        />
+      )}
+    </>
   );
 }

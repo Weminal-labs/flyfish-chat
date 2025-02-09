@@ -1,16 +1,16 @@
 import {
-  Dialog,
   Tab,
   TabGroup,
   TabList,
-  Transition,
   TabPanels,
   TabPanel,
+  Dialog,
+  Transition,
 } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { TokenData } from "../../../types/token";
 import { TokenService } from "../../../services/token.service";
-import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
+import { ArrowsUpDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useWallet } from "@suiet/wallet-kit";
 import ConnectWallet from "src/components/ui/connect-wallet";
 
@@ -81,65 +81,79 @@ export default function SwapModalAgent({
     return rate.toFixed(6);
   };
 
+  if (!connected) {
+    return <ConnectWallet />;
+  }
+
+  // if (!isOpen) {
+  //   return null;
+  // }
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      {!connected ? (
-        <ConnectWallet />
-      ) : (
-        <Dialog as="div" className="relative z-50" onClose={onClose}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-50" />
-          </Transition.Child>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black bg-opacity-50" />
+        </Transition.Child>
+        <div className="fixed inset-x-0 bottom-0 z-50 p-4 bg-gray-100 dark:bg-gray-900">
+          <div className="w-full max-w-md mx-auto bg-white rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-left shadow-xl">
+            {/* Header with close button */}
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium">AI Swap Assistant</h2>
+              <button
+                onClick={onClose}
+                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <XMarkIcon className="w-5 h-5" />
+              </button>
+            </div>
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-left align-middle shadow-xl transition-all">
-                <TabGroup>
-                  <TabList>
-                    <Tab className={({ selected }) =>
-                      `text-gray-400 ${
-                        selected ? 'text-blue-500' : 'hover:text-blue-400'
+            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-left align-middle shadow-xl transition-all">
+              <TabGroup>
+                <TabList className="flex space-x-4 border-b border-gray-200 mb-4">
+                  <Tab
+                    className={({ selected }) =>
+                      `px-4 py-2 text-sm font-medium border-b-2 ${
+                        selected
+                          ? "border-blue-500 text-blue-500"
+                          : "border-transparent text-gray-500 hover:text-blue-400"
                       } transition-colors duration-200`
-                    }>
-                      <Dialog.Title
-                        as="h3"
-                        className="p-2 text-lg font-medium leading-6"
-                      >
-                        Swap
-                      </Dialog.Title>
-                    </Tab>
-                    <Tab className={({ selected }) =>
-                      `text-gray-400 ${
-                        selected ? 'text-blue-500' : 'hover:text-blue-400'
+                    }
+                  >
+                    Swap
+                  </Tab>
+                  <Tab
+                    className={({ selected }) =>
+                      `px-4 py-2 text-sm font-medium border-b-2 ${
+                        selected
+                          ? "border-blue-500 text-blue-500"
+                          : "border-transparent text-gray-500 hover:text-blue-400"
                       } transition-colors duration-200`
-                    }>
-                      <Dialog.Title
-                        as="h3"
-                        className="p-2 text-lg font-medium leading-6 mb-4"
-                      >
-                        Logs
-                      </Dialog.Title>
-                    </Tab>
-                  </TabList>
-                  <TabPanels>
-                    {loading ? (
-                      <div className="text-center text-gray-400 py-4">
-                        Loading...
-                      </div>
-                    ) : (
-                      <>
-                        <TabPanel>
-                          <div className="bg-[#ffffff] rounded-lg border border-gray-600 p-4 mb-4">
-                            <div className="flex justify-between items-center mb-2">
-                              <div className="flex items-center">
+                    }
+                  >
+                    Logs
+                  </Tab>
+                </TabList>
+
+                <TabPanels>
+                  {loading ? (
+                    <div className="text-center text-gray-400 py-4">
+                      Loading...
+                    </div>
+                  ) : (
+                    <>
+                      <TabPanel>
+                        <div className="bg-[#ffffff] rounded-lg border border-gray-200 p-4 mb-4">
+                          <div className="flex justify-between items-center mb-2">
+                            <div className="flex items-center">
                               {fromToken && (
                                 <img
                                   src={fromToken.logo}
@@ -148,15 +162,15 @@ export default function SwapModalAgent({
                                 />
                               )}
                               <div>
-                                <div className="text-white text-xl">
+                                <div className="text-gray-900 text-xl">
                                   {amount}
                                 </div>
-                                <div className="text-gray-400">
+                                <div className="text-gray-500">
                                   {fromSymbol}
                                 </div>
                               </div>
                             </div>
-                            <div className="text-right text-gray-400">
+                            <div className="text-right text-gray-500">
                               ${getUSDValue(amount, fromToken)}
                             </div>
                           </div>
@@ -175,15 +189,15 @@ export default function SwapModalAgent({
                                 />
                               )}
                               <div>
-                                <div className="text-white text-xl">
+                                <div className="text-gray-900 text-xl">
                                   {(amount * Number(getExchangeRate())).toFixed(
                                     6
                                   )}
                                 </div>
-                                <div className="text-gray-400">{toSymbol}</div>
+                                <div className="text-gray-500">{toSymbol}</div>
                               </div>
                             </div>
-                            <div className="text-right text-gray-400">
+                            <div className="text-right text-gray-500">
                               $
                               {getUSDValue(
                                 amount * Number(getExchangeRate()),
@@ -193,7 +207,7 @@ export default function SwapModalAgent({
                           </div>
                         </div>
 
-                        <div className="text-sm text-gray-400 mb-4">
+                        <div className="text-sm text-gray-500 mb-4">
                           <div>Exchange Rate:</div>
                           <div>
                             1 {fromSymbol} = {getExchangeRate()} {toSymbol}
@@ -209,27 +223,30 @@ export default function SwapModalAgent({
                         </button>
                       </TabPanel>
 
-                    <TabPanel>
-                      <div className="bg-gray-700 rounded-lg border border-gray-600 p-4 mb-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <div className="flex items-center">
-                            <div>
-                              <div className="text-white text-xl">1000</div>
-                              <div className="text-gray-400">Sui</div>
+                      <TabPanel>
+                        <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-4">
+                          <div className="flex justify-between items-center mb-2">
+                            <div className="flex items-center">
+                              <div>
+                                <div className="text-gray-900 text-xl">
+                                  Transaction Logs
+                                </div>
+                                <div className="text-gray-500">
+                                  Recent activity
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </TabPanel>
+                      </TabPanel>
                     </>
-                    )}
-                  </TabPanels>
-                </TabGroup>
-              </Dialog.Panel>
-            </div>
+                  )}
+                </TabPanels>
+              </TabGroup>
+            </Dialog.Panel>
           </div>
-        </Dialog>
-      )}
+        </div>
+      </Dialog>
     </Transition>
   );
 }
