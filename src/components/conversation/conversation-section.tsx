@@ -19,10 +19,10 @@ import type { ConversationSectionProps } from "./types";
 export default function ConversationSection({
   className,
 }: ConversationSectionProps) {
-  const { conversation, setDoesFirstFetch } = useConversationState();
+  const { setDoesFirstFetch } = useConversationState();
 
   const _className =
-    "relative max-h-[calc(100dvh-45px-16px)] flex flex-col flex-1 pb-2";
+    "relative h-screen max-h-[calc(100dvh-45px-16px)] flex flex-col flex-1 pb-2";
 
   React.useEffect(() => {
     // Promise.all([
@@ -38,11 +38,7 @@ export default function ConversationSection({
   }, []);
 
   return (
-    <section
-      className={cn(_className, className, {
-        "h-screen": conversation.dialogs.length > 0,
-      })}
-    >
+    <section className={cn(_className, className)}>
       <div className="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] -z-10"></div>
       <RecommendationsBox />
       <ConversationDialogs />

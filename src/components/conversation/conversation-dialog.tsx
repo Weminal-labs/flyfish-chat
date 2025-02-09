@@ -26,7 +26,7 @@ const ConversationDialog = React.forwardRef<
     const wrapperClassName = "flex flex-col w-full max-w-[920px] mt-3";
     const containerClassName = "flex justify-start items-start w-3/4";
     const textContainerClassName =
-      "w-full border rounded-lg px-2 py-3 hover:ring-2";
+      "w-full border break-words rounded-lg px-2 py-3 hover:ring-2";
     const isUser = props.data.sender === "user";
 
     return (
