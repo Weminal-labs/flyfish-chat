@@ -1,28 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowsUpDownIcon } from '@heroicons/react/24/outline';
 import ChooseTokenModal from './choose-token-modal';
 import { useWallet } from '@suiet/wallet-kit';
 import ConnectWallet from 'src/components/ui/connect-wallet';
 import { WalletUtils } from 'src/utils/wallet';
-
-interface Token {
-  symbol: string;
-  name: string;
-  logo: string;
-  balance?: string;
-}
+import { TokenData } from '../../../types/token';
+import { getTokenSui, getTokenSuilend } from 'src/services/token.service';
 
 export default function SwapPage() {
   // wallet
   const { connected, address } = useWallet();
-
-  const [fromToken, setFromToken] = useState<Token>({ 
+  const [fromToken, setFromToken] = useState<TokenData>({ 
     symbol: 'SUI', 
     name: 'Sui', 
     logo: '/tokens/Sui.png',
     balance: '3.80'
   });
-  const [toToken, setToToken] = useState<Token>({ 
+  const [toToken, setToToken] = useState<TokenData>({ 
     symbol: 'mSEND', 
     name: 'MoveSend', 
     logo: '/tokens/mSend.png',
@@ -34,6 +28,18 @@ export default function SwapPage() {
   const [isChooseFromToken, setIsChooseFromToken] = useState(false);
   const [isChooseToToken, setIsChooseToToken] = useState(false);
 
+  React.useEffect(() => {
+    const getSuiToken = async () => {
+      const suiToken = await getTokenSui();
+      setFromToken(suiToken);
+    };
+    const getSuilendToken = async () => {
+      const suilendToken = await getTokenSuilend();
+      setToToken(suilendToken);
+    };
+    getSuiToken();
+    getSuilendToken();
+  }, []);
   const handleSwapPositions = () => {
     setFromToken(toToken);
     setToToken(fromToken);
@@ -41,16 +47,49 @@ export default function SwapPage() {
     setToAmount(fromAmount);
   };
 
+  // Tính toán tỷ giá giữa hai token
+  const calculateExchangeRate = (amount: string) => {
+    if (!fromToken.price || !toToken.price || !amount) return '0';
+
+    const fromValue = Number(amount);
+    const fromTokenPrice = fromToken.price;
+    const toTokenPrice = toToken.price;
+
+    // Tính toán dựa trên USD value
+    const usdValue = fromValue * fromTokenPrice;
+    const toValue = usdValue / toTokenPrice;
+
+    // Làm tròn số dựa trên decimals của token đích
+    const decimals = toToken.decimals || 9;
+    return toValue.toFixed(decimals);
+  };
+
+  // Cập nhật số lượng token đích khi thay đổi số lượng token nguồn
+  useEffect(() => {
+    const calculateToAmount = () => {
+      const calculatedAmount = calculateExchangeRate(fromAmount);
+      setToAmount(calculatedAmount);
+    };
+    calculateToAmount();
+  }, [fromAmount, fromToken, toToken]);
+
   const handleSwap = async () => {
     setLoading(true);
     try {
-      console.log(`Swapping ${fromAmount} ${fromToken.symbol} to ${toToken.symbol}`);
-      setToAmount((Number(fromAmount) * 1.2).toString());
+      console.log(`Swapping ${fromAmount} ${fromToken.symbol} to ${toAmount} ${toToken.symbol}`);
+      // Thực hiện swap ở đây
     } catch (error) {
       console.error('Swap failed:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Tính USD value
+  const getUSDValue = (amount: string, token: TokenData) => {
+    if (!token.price || !amount) return '0';
+    const value = Number(amount) * token.price;
+    return value.toFixed(2);
   };
 
   return (
@@ -82,7 +121,9 @@ export default function SwapPage() {
                 <span className="text-gray-400 ml-2">▼</span>
               </button>
             </div>
-            <div className="text-gray-400">${(Number(fromAmount) * 2.89).toFixed(2)}</div>
+            <div className="text-gray-400">
+              ${getUSDValue(fromAmount, fromToken)}
+            </div>
           </div>
         </div>
 
@@ -117,12 +158,21 @@ export default function SwapPage() {
                 <span className="text-gray-400 ml-2">▼</span>
               </button>
             </div>
-            <div className="text-gray-400">${(Number(toAmount) * 1.2).toFixed(2)}</div>
+            <div className="text-gray-400">
+              ${getUSDValue(toAmount, toToken)}
+            </div>
           </div>
         </div>
 
         <div className="text-sm text-gray-400 mb-4">
-          1 {fromToken.symbol} ≈ 2.643987 {toToken.symbol}
+          1 {fromToken.symbol} ≈ {calculateExchangeRate('1')} {toToken.symbol}
+          {fromToken.price && toToken.price && (
+            <div className="text-xs text-gray-500">
+              1 {fromToken.symbol} = ${fromToken.price.toFixed(6)}
+              {' | '}
+              1 {toToken.symbol} = ${toToken.price.toFixed(6)}
+            </div>
+          )}
         </div>
 
         <button
@@ -138,12 +188,14 @@ export default function SwapPage() {
         isOpen={isChooseFromToken}
         onClose={() => setIsChooseFromToken(false)}
         onSelect={setFromToken}
+        excludeToken={toToken}
       />
 
       <ChooseTokenModal
         isOpen={isChooseToToken}
         onClose={() => setIsChooseToToken(false)}
         onSelect={setToToken}
+        excludeToken={fromToken}
       />
     </div>
   );
