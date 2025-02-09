@@ -29,6 +29,7 @@ export default function SwapPage() {
   const [isChooseToToken, setIsChooseToToken] = useState(false);
 
   React.useEffect(() => {
+    // Lấy sui và mSEND token trước để hiển thị 2 giá trị swap mặc định
     const getSuiToken = async () => {
       const suiToken = await getTokenSui();
       setFromToken(suiToken);
@@ -40,6 +41,8 @@ export default function SwapPage() {
     getSuiToken();
     getSuilendToken();
   }, []);
+
+  // Swap positions: SUI -> mSEND và mSEND -> SUI
   const handleSwapPositions = () => {
     setFromToken(toToken);
     setToToken(fromToken);
