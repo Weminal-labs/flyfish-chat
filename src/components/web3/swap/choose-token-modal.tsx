@@ -1,34 +1,91 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState, useEffect } from 'react';
-import { TokenData } from '../../../types/token';
-import { TokenService } from '../../../services/token.service';
+import { TokenData, WalletBalance } from '../../../types/token';
+import { BALANCE_API, TokenService } from '../../../services/token.service';
+import axios from 'axios';
 
 interface ChooseTokenModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (token: TokenData) => void;
   excludeToken?: TokenData;
+  address?: string;
 }
 
 export default function ChooseTokenModal({ 
   isOpen, 
   onClose, 
   onSelect,
-  excludeToken 
+  excludeToken,
+  address
 }: ChooseTokenModalProps) {
   const [tokens, setTokens] = useState<TokenData[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    fetchTokens();
-  }, []);
+    if (isOpen && address) {
+      fetchTokensWithBalance();
+    }
+  }, [isOpen, address]);
 
-  const fetchTokens = async () => {
+  const fetchTokensWithBalance = async () => {
     setLoading(true);
     try {
       const tokenData = await TokenService.getTokenPrices();
-      setTokens(tokenData);
+      
+      if (address) {
+        try {
+          const balanceResponse = await axios.get(
+            `${BALANCE_API}?address=${address}`
+          );
+          if (balanceResponse.data.status !== false) {
+            const balances: WalletBalance[] = balanceResponse.data.data;
+            
+            // Gộp balance của các token trùng coinType
+            const mergedBalances = balances.reduce((acc: { 
+              coinType: string; 
+              balance: number;
+              symbol: string;
+            }[], curr) => {
+              const existingToken = acc.find(t => t.coinType === curr.coinType);
+              if (existingToken) {
+                // Cộng dồn balance nếu token đã tồn tại
+                existingToken.balance += Number(curr.balance);
+              } else {
+                // Thêm token mới vào mảng kết quả
+                acc.push({
+                  coinType: curr.coinType,
+                  balance: Number(curr.balance),
+                  symbol: curr.symbol
+                });
+              }
+              return acc;
+            }, []);
+
+            // Map balance đã được gộp vào danh sách token
+            const tokensWithBalance = tokenData.map(token => {
+              const tokenBalance = mergedBalances.find(
+                b => b.coinType === token.coin_type
+              );
+              return {
+                ...token,
+                balance: tokenBalance ? tokenBalance.balance.toString() : "0"
+              };
+            });
+            console.log("PHAP",tokensWithBalance);
+
+            setTokens(tokensWithBalance);
+          } else {
+            setTokens(tokenData);
+          }
+        } catch (error) {
+          console.error('Error fetching balances:', error);
+          setTokens(tokenData);
+        }
+      } else {
+        setTokens(tokenData);
+      }
     } catch (error) {
       console.error('Error loading tokens:', error);
     } finally {
@@ -133,6 +190,14 @@ export default function ChooseTokenModal({
                           <div className={`text-sm ${token.price_change_24h && token.price_change_24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                             {token.price_change_24h?.toFixed(2)}%
                           </div>
+                          {token.balance && (
+                            <div className="text-sm text-gray-400">
+                              Balance: {token.balance ? Number(token.balance).toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                              }) : '0.00'}
+                            </div>
+                          )}
                         </div>
                       </button>
                     ))}

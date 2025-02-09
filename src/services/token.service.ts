@@ -3,11 +3,13 @@ import { TokenData } from "../types/token";
 
 const COINS_INFO_API = "https://api-sui.cetus.zone/v2/sui/coins_info?is_verified_coin=true";
 const PRICE_API = "https://api.suilend.fi/proxy/price?address=";
+// API để lấy balance của token trong ví
+export const BALANCE_API = "https://swap-be-git-main-phuquivos-projects.vercel.app/allTokens";
 
 // Cache để lưu trữ kết quả API
 let tokenPricesCache: TokenData[] | null = null;
 let lastFetchTime = 0;
-const CACHE_DURATION = 30000; // 30 giây
+const CACHE_DURATION = 90000; // 90 giây
 
 export const TokenService = {
   async getTokenPrices(): Promise<TokenData[]> {
@@ -69,6 +71,32 @@ export const TokenService = {
   clearCache() {
     tokenPricesCache = null;
     lastFetchTime = 0;
+  },
+
+  // Cập nhật hàm lấy balance
+  async getTokenBalance(address: string, coinType: string): Promise<string> {
+    try {
+      const response = await axios.get(`${BALANCE_API}?address=${address}`);
+      
+      if (response.data.status === false) {
+        console.error("Error fetching balance:", response.data.data);
+        return "0";
+      }
+
+      // Tìm token balance trong danh sách trả về
+      const tokenBalance = response.data.data.find(
+        (token: any) => token.coin_type === coinType
+      );
+
+      if (tokenBalance && tokenBalance.balance) {
+        return tokenBalance.balance.toString();
+      }
+
+      return "0";
+    } catch (error) {
+      console.error("Error fetching token balance:", error);
+      return "0";
+    }
   }
 };
 
@@ -100,7 +128,7 @@ export const getTokenSui = async (): Promise<TokenData> => {
     symbol: 'SUI',
     name: 'Sui',
     logo: '/tokens/Sui.png',
-    balance: priceData.value,
+    balance: priceData.balance,
     price: priceData.value,
     price_change_24h: priceData.priceChange24h || 0,
     decimals: priceData.decimals,
@@ -115,7 +143,7 @@ export const getTokenSuilend = async (): Promise<TokenData> => {
     symbol: 'mSEND',
     name: 'mSend',
     logo: '/tokens/mSend.png',
-    balance: priceData.value,
+    balance: priceData.balance,
     price: priceData.value,
     price_change_24h: priceData.priceChange24h || 0,
     decimals: priceData.decimals,

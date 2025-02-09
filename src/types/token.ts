@@ -19,3 +19,14 @@ export interface TokenData {
   decimals?: number;
   coin_type?: string;
 } 
+
+export interface WalletBalance {
+    balance: number;
+    coinObjectId: string;
+    coinType: string;
+    disget: string;
+    previousTransaction: string;
+    symbol: string;
+    version: string;
+}
+

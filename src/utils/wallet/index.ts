@@ -18,6 +18,14 @@ function censorAddress(
   return `${address.slice(0, startLength)}...${address.slice(-endLength)}`;
 }
 
+// split token by balance
+function splitTokenByBalance(balance: number){
+  const suiBalance = balance / 10 ** 9;
+  const suilendBalance = balance / 10 ** 18;
+  return { suiBalance, suilendBalance };
+}
+
 export const WalletUtils = {
   censorAddress,
+  splitTokenByBalance,
 };

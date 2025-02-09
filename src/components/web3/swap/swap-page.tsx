@@ -14,13 +14,13 @@ export default function SwapPage() {
     symbol: 'SUI', 
     name: 'Sui', 
     logo: '/tokens/Sui.png',
-    balance: '3.80'
+    balance: '0.00'
   });
   const [toToken, setToToken] = useState<TokenData>({ 
     symbol: 'mSEND', 
     name: 'MoveSend', 
     logo: '/tokens/mSend.png',
-    balance: '500'
+    balance: '0.00'
   });
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
@@ -124,8 +124,14 @@ export default function SwapPage() {
                 <span className="text-gray-400 ml-2">▼</span>
               </button>
             </div>
-            <div className="text-gray-400">
-              ${getUSDValue(fromAmount, fromToken)}
+            <div className="text-gray-400 flex flex-row justify-between">
+              <div>${getUSDValue(fromAmount, fromToken)}</div>
+              <div>
+                {fromToken.balance ? Number(fromToken.balance).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                }) : '0.00'} {fromToken.symbol}
+              </div>
             </div>
           </div>
         </div>
@@ -161,8 +167,14 @@ export default function SwapPage() {
                 <span className="text-gray-400 ml-2">▼</span>
               </button>
             </div>
-            <div className="text-gray-400">
-              ${getUSDValue(toAmount, toToken)}
+            <div className="text-gray-400 flex flex-row justify-between">
+              <div>${getUSDValue(toAmount, toToken)}</div>
+              <div>
+                {toToken.balance ? Number(toToken.balance).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                }) : '0.00'} {toToken.symbol}
+              </div>
             </div>
           </div>
         </div>
@@ -171,9 +183,9 @@ export default function SwapPage() {
           1 {fromToken.symbol} ≈ {calculateExchangeRate('1')} {toToken.symbol}
           {fromToken.price && toToken.price && (
             <div className="text-xs text-gray-500">
-              1 {fromToken.symbol} = ${fromToken.price.toFixed(6)}
+              1 {fromToken.symbol} = ${fromToken.price}
               {' | '}
-              1 {toToken.symbol} = ${toToken.price.toFixed(6)}
+              1 {toToken.symbol} = ${toToken.price}
             </div>
           )}
         </div>
@@ -192,6 +204,7 @@ export default function SwapPage() {
         onClose={() => setIsChooseFromToken(false)}
         onSelect={setFromToken}
         excludeToken={toToken}
+        address={address}
       />
 
       <ChooseTokenModal
@@ -199,6 +212,7 @@ export default function SwapPage() {
         onClose={() => setIsChooseToToken(false)}
         onSelect={setToToken}
         excludeToken={fromToken}
+        address={address}
       />
     </div>
   );
