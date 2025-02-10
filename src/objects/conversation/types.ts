@@ -4,12 +4,24 @@ export type ChatAIResponseDataType = {
   user: string;
   text: string;
   action?: string;
-  content?: {
-    from_token: string;
-    destination_token: string;
-    amount: number;
-  };
   params?: {
+    amount: number;
+    destination_token: {
+      decimals: number;
+      description: string;
+      iconUrl: string;
+      id: string;
+      name: string;
+      symbol: string;
+    };
+    from_token: {
+      decimals: number;
+      description: string;
+      iconUrl: string;
+      id: string;
+      name: string;
+      symbol: string;
+    };
     txBytes: string;
   };
 };
@@ -19,6 +31,26 @@ export type DialogType = {
   sender: string;
   text: string;
   action?: string;
+  params?: {
+    amount: string;
+    destination_token: {
+      decimals: number;
+      description: string;
+      iconUrl: string;
+      id: string;
+      name: string;
+      symbol: string;
+    };
+    from_token: {
+      decimals: number;
+      description: string;
+      iconUrl: string;
+      id: string;
+      name: string;
+      symbol: string;
+    };
+    txBytes?: string;
+  };
   isBeingGenerated?: boolean;
 };
 
