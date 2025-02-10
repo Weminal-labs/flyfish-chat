@@ -15,6 +15,7 @@ import { WalletUtils } from "src/utils/wallet";
 
 // Import types
 import { TokenData } from "src/types/token";
+import { useConversationState } from "src/states/conversation";
 
 type SwapTabContainerProps = {
   isOpen: boolean;
@@ -34,6 +35,7 @@ export default function SwapTabContainer({
   logs,
 }: SwapTabContainerProps) {
   const { connected, signAndExecuteTransaction } = useWallet();
+  const { addDialog } = useConversationState();
 
   const [fromToken, setFromToken] = React.useState<TokenData | null>(null);
   const [toToken, setToToken] = React.useState<TokenData | null>(null);
@@ -95,9 +97,33 @@ export default function SwapTabContainer({
     }
     const txn = WalletUtils.createTransactionFromTxBytes(txBytes);
 
-    await signAndExecuteTransaction({
-      transaction: txn,
-    });
+    try {
+      const result = await signAndExecuteTransaction({
+        transaction: txn,
+      });
+
+      // Create success dialog message
+      const successDialog = {
+        id: "dialog-",
+        sender: "ai",
+        text: `✅ Swap transaction successful!\n\nSwapped ${amount} ${fromSymbol} to ${(amount * Number(getExchangeRate())).toFixed(6)} ${toSymbol}\n\nTransaction Hash: https://suivision.xyz/txblock/${result.digest}`,
+        action: "SWAP_TOKEN_SUCCESS",
+      };
+
+      // Add dialog to conversation
+      addDialog(successDialog);
+
+    } catch (error) {
+      console.error("Swap transaction failed:", error);
+
+      // Add error dialog
+      addDialog({
+        id: "dialog-",
+        sender: "ai",
+        text: `❌ Swap transaction failed. Please try again.`,
+        action: "SWAP_TOKEN_ERROR",
+      });
+    }
   };
 
   if (!connected) {
@@ -116,10 +142,9 @@ export default function SwapTabContainer({
             <TabList className="flex space-x-4 border-b border-gray-200 mb-4">
               <Tab
                 className={({ selected }) =>
-                  `px-4 py-2 text-sm font-medium border-b-2 ${
-                    selected
-                      ? "border-blue-500 text-blue-500"
-                      : "border-transparent text-gray-500 hover:text-blue-400"
+                  `px-4 py-2 text-sm font-medium border-b-2 ${selected
+                    ? "border-blue-500 text-blue-500"
+                    : "border-transparent text-gray-500 hover:text-blue-400"
                   } transition-colors duration-200`
                 }
               >
@@ -127,10 +152,9 @@ export default function SwapTabContainer({
               </Tab>
               <Tab
                 className={({ selected }) =>
-                  `px-4 py-2 text-sm font-medium border-b-2 ${
-                    selected
-                      ? "border-blue-500 text-blue-500"
-                      : "border-transparent text-gray-500 hover:text-blue-400"
+                  `px-4 py-2 text-sm font-medium border-b-2 ${selected
+                    ? "border-blue-500 text-blue-500"
+                    : "border-transparent text-gray-500 hover:text-blue-400"
                   } transition-colors duration-200`
                 }
               >

@@ -15,6 +15,7 @@ import { WalletUtils } from "src/utils/wallet";
 
 // Import types
 import { TokenData } from "src/types/token";
+import { useConversationState } from "src/states/conversation";
 
 type DepositeTabContainerProps = {
   symbol: string;
@@ -32,6 +33,7 @@ export default function DepositeTabContainer({
   const { connected, signAndExecuteTransaction } = useWallet();
   const [price, setPrice] = React.useState<string>("0.0");
   const [loading, setLoading] = React.useState(false);
+  const { addDialog } = useConversationState();
 
   React.useEffect(() => {
     TokenAPI.getTokenPriceByCoinType("0x2::sui::SUI").then((price) => {
@@ -97,8 +99,15 @@ export default function DepositeTabContainer({
     }
     const txn = WalletUtils.createTransactionFromTxBytes(txBytes);
 
-    await signAndExecuteTransaction({
+    const result = await signAndExecuteTransaction({
       transaction: txn,
+    });
+
+    addDialog({
+      id: "dialog-",
+      sender: "ai",
+      text: `✅ Deposit transaction successful!\n\nDeposited ${amount} ${symbol}\n\nTransaction Hash: https://suivision.xyz/txblock/${result.digest}`,
+      action: "DEPOSIT_TOKEN_SUCCESS",
     });
   };
 
@@ -118,10 +127,9 @@ export default function DepositeTabContainer({
             <TabList className="flex space-x-4 border-b border-gray-200 mb-4">
               <Tab
                 className={({ selected }) =>
-                  `px-4 py-2 text-sm font-medium border-b-2 ${
-                    selected
-                      ? "border-blue-500 text-blue-500"
-                      : "border-transparent text-gray-500 hover:text-blue-400"
+                  `px-4 py-2 text-sm font-medium border-b-2 ${selected
+                    ? "border-blue-500 text-blue-500"
+                    : "border-transparent text-gray-500 hover:text-blue-400"
                   } transition-colors duration-200`
                 }
               >
@@ -129,10 +137,9 @@ export default function DepositeTabContainer({
               </Tab>
               <Tab
                 className={({ selected }) =>
-                  `px-4 py-2 text-sm font-medium border-b-2 ${
-                    selected
-                      ? "border-blue-500 text-blue-500"
-                      : "border-transparent text-gray-500 hover:text-blue-400"
+                  `px-4 py-2 text-sm font-medium border-b-2 ${selected
+                    ? "border-blue-500 text-blue-500"
+                    : "border-transparent text-gray-500 hover:text-blue-400"
                   } transition-colors duration-200`
                 }
               >
