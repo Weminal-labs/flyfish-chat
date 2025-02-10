@@ -23,6 +23,7 @@ import HomePage from "src/pages/home";
 
 // Import types
 import type { RouteObject } from "react-router-dom";
+import SwapTabContainer from "src/components/swap-token/swap-tab-container";
 
 export const AuthenticatedRoutesMetadata = new Map([
   ["/", import.meta.env.VITE_APP_NAME],

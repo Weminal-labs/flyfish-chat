@@ -5,7 +5,6 @@ import {
   TabList,
   TabPanels,
   TabPanel,
-  Transition,
 } from "@headlessui/react";
 import { TokenData } from "../../types/token";
 import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
@@ -111,19 +110,8 @@ export default function SwapTabContainer({
   // }
 
   return (
-    <Transition appear show={isOpen} as={React.Fragment}>
-      <Transition.Child
-        as={React.Fragment}
-        enter="ease-out duration-300"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="ease-in duration-200"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        <div className="fixed inset-0 bg-black bg-opacity-50" />
-      </Transition.Child>
-      <div className=" inset-x-0 bottom-0 z-50 p-4 bg-gray-100 dark:bg-gray-900">
+    <div className="inset-x-0 bottom-0 z-50 p-4">
+      <div className=" inset-x-0 bottom-0 z-50 p-4">
         <div className="w-full max-w-md mx-auto bg-white rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-left shadow-xl">
           <TabGroup>
             <TabList className="flex space-x-4 border-b border-gray-200 mb-4">
@@ -226,7 +214,7 @@ export default function SwapTabContainer({
                   </TabPanel>
 
                   <TabPanel>
-                    <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-4">
+                    <div className="bg-gray-50 ">
                       <JsonLogger logs={logs} />
                     </div>
                   </TabPanel>
@@ -236,6 +224,6 @@ export default function SwapTabContainer({
           </TabGroup>
         </div>
       </div>
-    </Transition>
+    </div>
   );
 }
