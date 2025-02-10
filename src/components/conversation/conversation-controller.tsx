@@ -540,6 +540,7 @@ export default function ConversationController() {
   return (
     <div className="relative w-full max-w-[840px] mx-auto border rounded-lg flex items-end px-3 py-2 bg-gray-100 hover:ring-2">
       <div
+        id="user-input"
         contentEditable={conversation.responseStatus === "WAITING"}
         ref={inputRef}
         className="w-full min-h-[60px] bg-transparent max-h-[156px] focus:outline-0"

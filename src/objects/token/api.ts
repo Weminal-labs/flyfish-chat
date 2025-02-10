@@ -110,6 +110,21 @@ export class TokenAPI {
     }
   }
 
+  static async getTokenPriceByCoinType(coinType: string) {
+    const url = `${import.meta.env.VITE_SUILEND_URL}/price`;
+    const params = new URLSearchParams({ address: coinType });
+
+    try {
+      const priceResponse = await api.get<any>(url, { params });
+      const priceData = priceResponse.data.data;
+
+      return priceData?.value;
+    } catch (error) {
+      console.error(`Error fetching price for ${coinType}:`, error);
+      return null;
+    }
+  }
+
   static async getTokenPrice(token: any): Promise<TokenData | null> {
     const url = `${import.meta.env.VITE_SUILEND_URL}/price`;
     const params = new URLSearchParams({ address: token.coin_type });

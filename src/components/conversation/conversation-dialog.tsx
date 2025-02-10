@@ -15,6 +15,7 @@ import {
 } from "../ui/tooltip";
 import MDContent from "../markdown";
 import SwapTabContainer from "../swap-token/swap-tab-container";
+import DepositeTabContainer from "../deposit-token/deposit-tab-container";
 
 // Import types
 import type {
@@ -67,9 +68,34 @@ const ConversationDialog = React.forwardRef<
     const txBytes = params.txBytes;
     const fromSymbol = params.from_token.symbol;
     const toSymbol = params.destination_token.symbol;
-    
 
-    ContentContainer = <SwapTabContainer isOpen={true} fromSymbol={fromSymbol} toSymbol={toSymbol} amount={amount} txBytes={txBytes} logs={params} />;
+    ContentContainer = (
+      <SwapTabContainer
+        isOpen={true}
+        fromSymbol={fromSymbol}
+        toSymbol={toSymbol}
+        amount={amount}
+        txBytes={txBytes}
+        logs={params as any}
+      />
+    );
+  } else if (
+    props.data.action === "DEPOSIT_TOKEN_SUILEND" &&
+    props.data.params
+  ) {
+    const params = props.data.params as any;
+    const amount = parseFloat(params.amount);
+    const symbol = params.coinMetadata.symbol;
+    const txBytes = params.txBytes;
+
+    ContentContainer = (
+      <DepositeTabContainer
+        amount={amount}
+        symbol={symbol}
+        txBytes={txBytes}
+        logs={params as any}
+      />
+    );
   } else {
     ContentContainer = <TextContentContainer {...props} isUser={isUser} />;
   }
