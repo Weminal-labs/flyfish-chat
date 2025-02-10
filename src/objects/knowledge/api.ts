@@ -1,3 +1,4 @@
+import { useWallet } from "@suiet/wallet-kit";
 import { API } from "src/api";
 
 // Import utils
@@ -19,11 +20,12 @@ export class KnowledgeAPI {
    * @returns
    */
   static async getKnowledge() {
+    const { account } = useWallet();
+
     try {
       const data = await TuskyUtils.getFolderByUserAddress(
-        "0xb4b291607e91da4654cab88e5e35ba2921ef68f1b43725ef2faeae045bf5915d"
+        account?.address || ""
       ); // input the user wallet address
-      console.log("sss", data);
       if (!data) return;
 
       if (typeof data != "string") {
