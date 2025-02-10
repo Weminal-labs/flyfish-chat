@@ -16,6 +16,7 @@ import {
 import MDContent from "../markdown";
 import SwapTabContainer from "../swap-token/swap-tab-container";
 import DepositeTabContainer from "../deposit-token/deposit-tab-container";
+import WithdrawTabContainer from "../withdraw-token/deposit-tab-container";
 
 // Import types
 import type {
@@ -75,6 +76,23 @@ const ConversationDialog = React.forwardRef<
         fromSymbol={fromSymbol}
         toSymbol={toSymbol}
         amount={amount}
+        txBytes={txBytes}
+        logs={params as any}
+      />
+    );
+  } else if (
+    props.data.action === "WITHDRAW_TOKEN_SUILEND" &&
+    props.data.params
+  ) {
+    const params = props.data.params as any;
+    const amount = parseFloat(params.amount);
+    const symbol = params.coinMetadata.symbol;
+    const txBytes = params.txBytes;
+
+    ContentContainer = (
+      <WithdrawTabContainer
+        amount={amount}
+        symbol={symbol}
         txBytes={txBytes}
         logs={params as any}
       />

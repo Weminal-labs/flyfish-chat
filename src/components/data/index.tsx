@@ -1,6 +1,8 @@
 import React from "react";
 import cn from "classnames";
+import { Link } from "react-router-dom";
 import { Sparkle } from "lucide-react";
+import { useWallet } from "@suiet/wallet-kit";
 
 // Import components
 import { ScrollArea } from "../ui/scroll-area";
@@ -81,25 +83,19 @@ function DataCard(props: DataCardProps) {
               </span>
             </div>
           </div>
-          <span
-            onClick={() => {
-              window.open(
-                `https://walruscan.com/testnet/blob/${props.data.uploadInfo.blobId}`,
-                "_blank"
-              );
-            }}
-            className="text-[#0057FF] max-w-[200px] text-[14px] underline font-[500] mt-[-8px] block cursor-pointer truncate overflow-hidden text-ellipsis"
+          <a
+            href={`https://walruscan.com/testnet/blob/${props.data.uploadInfo.blobId}`}
+            target="_blank"
           >
-            BlobID: {props.data.uploadInfo.blobId || "Undefinded"}
-          </span>
-          <span
-            onClick={() => {
-              window.open(props.data.url, "_blank");
-            }}
-            className="text-gray-400 max-w-[364px] block text-[16px] mt-[-8px] cursor-pointer  "
-          >
-            {props.data.text}
-          </span>
+            <span className="text-[#0057FF] max-w-[200px] text-[14px] underline font-[500] mt-[-8px] block cursor-pointer truncate overflow-hidden text-ellipsis">
+              BlobID: {props.data.uploadInfo.blobId || "Undefinded"}
+            </span>
+          </a>
+          <a href={props.data.url} target="_blank">
+            <span className="text-gray-400 max-w-[364px] block text-[16px] mt-[-8px] cursor-pointer  ">
+              {props.data.text}
+            </span>
+          </a>
 
           <div className="flex justify-end ">
             <div className="w-fit relative group">
@@ -140,14 +136,18 @@ function DataCard(props: DataCardProps) {
 
 export default function Data({ className }: DataProps) {
   const { list, setListKnowledge } = useKnowledgeState();
+  const { account } = useWallet();
 
   const _className =
     "flex flex-col h-screen max-h-[calc(100dvh-45px-16px)] border-s";
 
   React.useEffect(() => {
-    KnowledgeAPI.getKnowledge().then((list) => setListKnowledge(list));
-  }, []);
-  console.log(list);
+    if (account?.address)
+      KnowledgeAPI.getKnowledge(account?.address).then((list) =>
+        setListKnowledge(list)
+      );
+  }, [account?.address]);
+
   [[], []];
   return (
     <div className={cn(_className, className)}>
@@ -165,7 +165,7 @@ export default function Data({ className }: DataProps) {
         </div>
       ) : (
         <ScrollArea className="w-full [&>div[data-radix-scroll-area-viewport]]:max-h-[calc(100dvh-45px-16px-56px-12px)] px-3">
-          <div className="px-6 mt-2">
+          <div className="px-3 mt-2">
             {list.map((knowledgeList, index) =>
               knowledgeList.map((knowledge, id) => (
                 <DataCard key={index * 10 + id} data={knowledge} />
