@@ -4,11 +4,11 @@ import { create } from "zustand";
 import type { KnowledgeType } from "src/objects/knowledge/types";
 
 type KnowledgeState = {
-  list: Array<KnowledgeType>;
+  list: Array<Array<KnowledgeType>>;
 };
 
 type KnowledgeActions = {
-  setListKnowledge(listKnowledge: Array<KnowledgeType>): void;
+  setListKnowledge(listKnowledge: Array<Array<KnowledgeType>>): void;
   reset(): void;
 };
 
@@ -20,7 +20,7 @@ export const useKnowledgeState = create<KnowledgeState & KnowledgeActions>(
   (set) => {
     return {
       ...initialState,
-      setListKnowledge(listKnowledge: Array<KnowledgeType> = []) {
+      setListKnowledge(listKnowledge: Array<Array<KnowledgeType>> = []) {
         set((state) => ({ ...state, list: listKnowledge }));
       },
       reset() {

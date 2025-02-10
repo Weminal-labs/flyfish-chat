@@ -7,5 +7,9 @@ interface ImportMetaEnv {
   readonly VITE_SUILEND_URL: string;
   readonly VITE_SUICETUS_URL: string;
   readonly VITE_SWAP_SERVER_URL: string;
+  readonly VITE_TUSKY_API_KEY: string;
+  readonly VITE_TUS_API: string;
+  readonly VITE_DEFAULT_VAULT_ID: string;
+  readonly VITE_DEFAULT_PARENT_ID: string;
   // more env variables...
 }
