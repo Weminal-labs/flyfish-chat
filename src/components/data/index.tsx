@@ -1,6 +1,7 @@
 import React from "react";
 import cn from "classnames";
 import { Sparkle } from "lucide-react";
+import ReactJson from "react-json-view";
 
 // Import components
 import { ScrollArea } from "../ui/scroll-area";
@@ -13,7 +14,6 @@ import { useKnowledgeState } from "src/states/knowledge";
 
 // Import utils
 import { DataUIUtils } from "./utils";
-import ReactJson from "react-json-view";
 // Import types
 import type {
   KnowledgeType,
@@ -137,7 +137,8 @@ function DataCard(props: DataCardProps) {
 export default function Data({ className }: DataProps) {
   const { list, setListKnowledge } = useKnowledgeState();
 
-  const _className = "flex flex-col max-h-[calc(100dvh-45px-16px)] border-s";
+  const _className =
+    "flex flex-col h-screen max-h-[calc(100dvh-45px-16px)] border-s";
 
   React.useEffect(() => {
     KnowledgeAPI.getKnowledge().then((list) => setListKnowledge(list));
@@ -149,9 +150,9 @@ export default function Data({ className }: DataProps) {
       <div className="px-3 py-2 border-b">
         <div className="flex items-center">
           <Sparkle className="me-2" />
-          <h3 className="font-bold text-2xl">Used data</h3>
+          <h3 className="font-bold text-2xl">Crawl Result</h3>
         </div>
-        <p>Most-used topics</p>
+        <p>Stores data on the fly</p>
       </div>
       {list.length === 0 ? (
         <div className="w-full h-fit flex flex-col items-center px-2 py-3 border rounded-lg">

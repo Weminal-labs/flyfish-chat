@@ -1,6 +1,22 @@
 import { ConcateCallBack } from "./types";
 
 /**
+ * Use to generate a random alphanumric string
+ * @param length
+ * @returns
+ */
+function generateRandomString(length: number): string {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+/**
  * Use to concatenate string. Pass a string to first parameter and pass other strings,
  * functions or just a string to second parameter.
  * @param o original string, is a string you want to be concatenated with `vals`.
@@ -58,4 +74,5 @@ function formatURL(...parts: Array<string>) {
 export const StringUtils = {
   concate,
   formatURL,
+  generateRandomString,
 };
