@@ -10,6 +10,13 @@ const api = new API({
   baseURL: import.meta.env.VITE_ATOMA_BASE_URL,
 });
 
+console.log(
+  import.meta.env.VITE_TUSKY_API_KEY,
+  "ssss",
+  import.meta.env.VITE_ATOMA_BASE_URL,
+  "sssssssssssssss"
+);
+
 export class AtomaAPI {
   /**
    * Use to list supported models

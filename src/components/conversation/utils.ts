@@ -1,48 +1,71 @@
 import cn from "classnames";
 
 export class ConversationUIUtils {
+  static KeywordAttributeKeys = {
+    Type: "data-type",
+    RequestAction: "data-request-action",
+  };
+
   static SuggestionCustomAttributeKeys = {
-    type: "data-type",
-    value: "data-suggestion-value",
+    Type: "data-type",
+    Value: "data-suggestion-value",
   };
 
   static Keywords = [
     {
       regex: /(swap)$/i,
-      suggestion: "{{AMOUNT}} of {{Token A}} to {{Token B}}",
-      value: "swap",
+      suggestion:
+        "{{AMOUNT}} of {{Token A}} to {{Token B}} for address {{WALLET ADDRESS}}",
+      value: "SWAP_TOKEN",
     },
     {
       regex: /(balance)$/i,
-      suggestion: "of {{WALLET ADDRESS}}",
-      value: "balance",
+      suggestion: "of address {{WALLET ADDRESS}}",
+      value: "GET_BALANCE",
     },
     {
       regex: /(transfer)$/i,
-      suggestion: "{{AMOUNT}} to {{WALLET ADDRESS}}",
-      value: "transfer",
+      suggestion: "{{AMOUNT}} to address {{WALLET ADDRESS}}",
+      value: "SEND_TOKEN",
     },
     {
       regex: /(deposit)$/i,
       suggestion: "DONT KNOW YET",
-      value: "deposit",
+      value: "DEPOSIT_TOKEN",
     },
     {
       regex: /(portfolio)$/i,
-      suggestion: "of {{WALLET ADDRESS}}",
-      value: "portfolio",
+      suggestion: "of address {{WALLET ADDRESS}}",
+      value: "GET_PORTFOLIO",
     },
     {
       regex: /(repay)$/i,
-      suggestion: "{{AMOUNT}} to {{WALLET ADDRESS}}",
-      value: "repay",
+      suggestion: "{{AMOUNT}} to address {{WALLET ADDRESS}}",
+      value: "REPAY_TOKEN",
     },
     {
       regex: /(withdraw)$/i,
-      suggestion: "{{AMOUNT}} from my {{WALLET ADDRESS}}",
-      value: "withdraw",
+      suggestion: "{{AMOUNT}} from my wallet address {{WALLET ADDRESS}}",
+      value: "WITHDRAW_TOKEN",
     },
   ];
+
+  /**
+   * Use to check keyword of given value
+   * @param value
+   * @returns
+   */
+  static hasKeywordValue(value?: string | null) {
+    if (!value) return false;
+
+    for (const keyword of ConversationUIUtils.Keywords) {
+      if (keyword.value === value) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   /**
    * Use to get keyword metadata from regex of a keyword
@@ -52,6 +75,18 @@ export class ConversationUIUtils {
   static getKeywordMetadata(regex: RegExp) {
     for (const keyword of ConversationUIUtils.Keywords) {
       if (keyword.regex === regex) {
+        return keyword;
+      }
+    }
+  }
+
+  /**
+   * Use to get full metadata of keyword with its value
+   * @param value
+   */
+  static getKeywordMetadataByValue(value: string) {
+    for (const keyword of ConversationUIUtils.Keywords) {
+      if (keyword.value === value) {
         return keyword;
       }
     }
@@ -116,12 +151,22 @@ export class ConversationUIUtils {
     const pseudoAfterClassName =
       "after:absolute after:inline-block after:w-auto after:left-[-50%] after:top-[-200%] after:content-['Press_Tab_to_apply'] after:font-normal after:text-sm after:text-primary after:z-20 after:whitespace-nowrap after:bg-white after:px-3 after:py-2 after:rounded-lg after:border";
 
+    // const keywordMetadata = ConversationUIUtils.getKeywordMetadataByValue(
+    //   keyword.toLowerCase()
+    // );
+
+    // Set attributes
     span.textContent = keyword;
     span.className = cn(
       spanClassName,
       pseudoBeforeClassName,
       pseudoAfterClassName
     );
+    span.setAttribute(
+      ConversationUIUtils.KeywordAttributeKeys.RequestAction,
+      keyword.toLowerCase()
+    );
+    span.setAttribute(ConversationUIUtils.KeywordAttributeKeys.Type, "keyword");
 
     // Set timeout
     setTimeout(() => {
