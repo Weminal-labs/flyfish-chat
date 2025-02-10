@@ -79,8 +79,10 @@ const ConversationDialog = React.forwardRef<
         logs={params as any}
       />
     );
-  }
-  if (props.data.action === "DEPOSIT_TOKEN_SUILEND" && props.data.params) {
+  } else if (
+    props.data.action === "DEPOSIT_TOKEN_SUILEND" &&
+    props.data.params
+  ) {
     const params = props.data.params as any;
     const amount = parseFloat(params.amount);
     const symbol = params.coinMetadata.symbol;
