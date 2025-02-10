@@ -19,7 +19,7 @@ import type { ConversationSectionProps } from "./types";
 export default function ConversationSection({
   className,
 }: ConversationSectionProps) {
-  const { setDoesFirstFetch, setAgentId } = useConversationState();
+  const { setDoesFirstFetch, setAgentId, addDialog } = useConversationState();
 
   const _className =
     "relative h-screen max-h-[calc(100dvh-45px-16px)] flex flex-col flex-1 pb-2";
@@ -35,9 +35,20 @@ export default function ConversationSection({
     //   setDoesFirstFetch(true);
     // });
     ConversationAPI.getAgentIds().then((data) => {
-      console.log("Agent:", data.agents[0]);
       setAgentId(data.agents[0].id);
       setDoesFirstFetch(true);
+      // Use to modify style of Swap box
+      // addDialog({
+      //   id: "dialog-01",
+      //   sender: "user",
+      //   text: "Hello",
+      // });
+      // addDialog({
+      //   id: "dialog-02",
+      //   sender: "ai",
+      //   text: "random",
+      //   action: "SWAP_TOKEN",
+      // });
     });
   }, []);
 

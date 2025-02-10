@@ -1,8 +1,12 @@
-import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState, useEffect } from "react";
-import { TokenData, WalletBalance } from "../../types/token";
-import { BALANCE_API, TokenService } from "../../services/token.service";
 import axios from "axios";
+import { Dialog, Transition } from "@headlessui/react";
+
+// Import objects
+import { TokenAPI } from "src/objects/token/api";
+
+// Import types
+import type { TokenData, WalletBalance } from "../../types/token";
 
 interface ChooseTokenModalProps {
   isOpen: boolean;
@@ -32,13 +36,13 @@ export default function ChooseTokenModal({
   const fetchTokensWithBalance = async () => {
     setLoading(true);
     try {
-      const tokenData = await TokenService.getTokenPrices();
+      const tokenData = await TokenAPI.getTokenPrices();
 
       if (address) {
         try {
-          const balanceResponse = await axios.get(
-            `${BALANCE_API}?address=${address}`
-          );
+          const url = `${import.meta.env.VITE_SWAP_SERVER_URL}/allTokens`;
+          const params = new URLSearchParams({ address });
+          const balanceResponse = await axios.get(url, { params });
           if (balanceResponse.data.status !== false) {
             const balances: WalletBalance[] = balanceResponse.data.data;
 

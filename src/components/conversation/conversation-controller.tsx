@@ -404,10 +404,7 @@ export default function ConversationController() {
           // 4. Create a new timeout for final change (shouldn't replace).
 
           // To do: create dialog for AI
-          const aiDialog = ConversationUtils.createDialog(
-            data[0].text,
-            ConversationConstants.Senders.AI
-          );
+          const aiDialog = ConversationUtils.createDialogFromResponse(data[0]);
 
           // Update response status
           setConversationResponseStatus("DONE");
@@ -417,11 +414,6 @@ export default function ConversationController() {
           const timeout = setTimeout(() => {
             _updateAIResponse(aiDialog);
           }, 50);
-
-          if (aiPlaceHolderDialog.action === "swap") {
-            setConversationResponseStatus("WAITING");
-            clearTimeout(timeout);
-          }
         }
       );
     };
@@ -531,7 +523,7 @@ export default function ConversationController() {
       handleBlurEvent,
       handleFocusEvent,
     };
-  }, [inputRef.current, conversation.agentId]);
+  }, [inputRef.current, conversation.agentId, account?.address]);
 
   React.useEffect(() => {
     if (inputRef.current && inputRef.current.childNodes.length === 0) {
