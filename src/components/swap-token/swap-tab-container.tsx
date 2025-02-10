@@ -8,11 +8,12 @@ import {
   Transition,
 } from "@headlessui/react";
 import { TokenData } from "../../types/token";
-import { ArrowsUpDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
 import { useWallet } from "@suiet/wallet-kit";
 import { TokenAPI } from "src/objects/token/api";
 import JsonLogger from "./swap-log";
 import ConnectWallet from "../ui/connect-wallet";
+import handleSwap from "./sign-transaction";
 
 type SwapModalAgentProps = {
   isOpen: boolean;
@@ -20,7 +21,6 @@ type SwapModalAgentProps = {
   toSymbol: string;
   amount: number;
   txBytes?: string;
-  onClose: () => void;
   onSwap: (txBytes: string) => void;
 };
 
@@ -30,10 +30,8 @@ export default function SwapTabContainer({
   toSymbol,
   amount,
   txBytes,
-  onClose,
-  onSwap,
 }: SwapModalAgentProps) {
-  const { connected, address } = useWallet();
+  const { connected, signAndExecuteTransaction } = useWallet();
 
   const [fromToken, setFromToken] = React.useState<TokenData | null>(null);
   const [toToken, setToToken] = React.useState<TokenData | null>(null);
@@ -63,6 +61,8 @@ export default function SwapTabContainer({
 
         setFromToken(from || null);
         setToToken(to || null);
+        console.log("from", from);
+        console.log("to", to);
       } catch (error) {
         console.error("Error fetching tokens:", error);
       } finally {
@@ -84,8 +84,25 @@ export default function SwapTabContainer({
   // Tính tỷ giá
   const getExchangeRate = () => {
     if (!fromToken?.price || !toToken?.price) return "0";
-    const rate = toToken.price / fromToken.price;
-    return rate.toFixed(6);
+
+    // Tính toán dựa trên USD value của 1 token
+    const usdValue = 1 * fromToken.price;
+    const toValue = usdValue / toToken.price;
+
+    // Làm tròn số dựa trên decimals của token đích
+    const decimals = toToken.decimals || 9;
+    return toValue.toFixed(decimals);
+  };
+
+  const handleSwapTab = async () => {
+    const tx = handleSwap(txBytes);
+    console.log("tx", tx);
+
+    await signAndExecuteTransaction({
+      transaction: tx,
+    }).then(async (result) => {
+      alert("Sui sent successfully");
+    });
   };
 
   if (!connected) {
@@ -111,132 +128,115 @@ export default function SwapTabContainer({
       </Transition.Child>
       <div className=" inset-x-0 bottom-0 z-50 p-4 bg-gray-100 dark:bg-gray-900">
         <div className="w-full max-w-md mx-auto bg-white rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-left shadow-xl">
-          {/* Header with close button */}
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-medium">AI Swap Assistant</h2>
-            <button
-              onClick={onClose}
-              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-            >
-              <XMarkIcon className="w-5 h-5" />
-            </button>
-          </div>
+          <TabGroup>
+            <TabList className="flex space-x-4 border-b border-gray-200 mb-4">
+              <Tab
+                className={({ selected }) =>
+                  `px-4 py-2 text-sm font-medium border-b-2 ${
+                    selected
+                      ? "border-blue-500 text-blue-500"
+                      : "border-transparent text-gray-500 hover:text-blue-400"
+                  } transition-colors duration-200`
+                }
+              >
+                Swap
+              </Tab>
+              <Tab
+                className={({ selected }) =>
+                  `px-4 py-2 text-sm font-medium border-b-2 ${
+                    selected
+                      ? "border-blue-500 text-blue-500"
+                      : "border-transparent text-gray-500 hover:text-blue-400"
+                  } transition-colors duration-200`
+                }
+              >
+                Logs
+              </Tab>
+            </TabList>
 
-          <div className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-left align-middle shadow-xl transition-all">
-            <TabGroup>
-              <TabList className="flex space-x-4 border-b border-gray-200 mb-4">
-                <Tab
-                  className={({ selected }) =>
-                    `px-4 py-2 text-sm font-medium border-b-2 ${
-                      selected
-                        ? "border-blue-500 text-blue-500"
-                        : "border-transparent text-gray-500 hover:text-blue-400"
-                    } transition-colors duration-200`
-                  }
-                >
-                  Swap
-                </Tab>
-                <Tab
-                  className={({ selected }) =>
-                    `px-4 py-2 text-sm font-medium border-b-2 ${
-                      selected
-                        ? "border-blue-500 text-blue-500"
-                        : "border-transparent text-gray-500 hover:text-blue-400"
-                    } transition-colors duration-200`
-                  }
-                >
-                  Logs
-                </Tab>
-              </TabList>
-
-              <TabPanels>
-                {loading ? (
-                  <div className="text-center text-gray-400 py-4">
-                    Loading...
-                  </div>
-                ) : (
-                  <>
-                    <TabPanel>
-                      <div className="bg-[#ffffff] rounded-lg border border-gray-200 p-4 mb-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <div className="flex items-center">
-                            {fromToken && (
-                              <img
-                                src={fromToken.logo}
-                                alt={fromToken.symbol}
-                                className="w-8 h-8 rounded-full mr-2"
-                              />
-                            )}
-                            <div>
-                              <div className="text-gray-900 text-xl">
-                                {amount}
-                              </div>
-                              <div className="text-gray-500">{fromSymbol}</div>
+            <TabPanels>
+              {loading ? (
+                <div className="text-center text-gray-400 py-4">Loading...</div>
+              ) : (
+                <>
+                  <TabPanel>
+                    <div className="bg-[#ffffff] rounded-lg border border-gray-200 p-4 mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <div className="flex items-center">
+                          {fromToken && (
+                            <img
+                              src={fromToken.logo}
+                              alt={fromToken.symbol}
+                              className="w-8 h-8 rounded-full mr-2"
+                            />
+                          )}
+                          <div>
+                            <div className="text-gray-900 text-xl">
+                              {amount}
                             </div>
-                          </div>
-                          <div className="text-right text-gray-500">
-                            ${getUSDValue(amount, fromToken)}
+                            <div className="text-gray-500">{fromSymbol}</div>
                           </div>
                         </div>
-
-                        <div className="flex justify-center my-2">
-                          <ArrowsUpDownIcon className="w-5 h-5 text-blue-400" />
+                        <div className="text-right text-gray-500">
+                          ${getUSDValue(amount, fromToken)}
                         </div>
+                      </div>
 
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center">
-                            {toToken && (
-                              <img
-                                src={toToken.logo}
-                                alt={toToken.symbol}
-                                className="w-8 h-8 rounded-full mr-2"
-                              />
-                            )}
-                            <div>
-                              <div className="text-gray-900 text-xl">
-                                {(amount * Number(getExchangeRate())).toFixed(
-                                  6
-                                )}
-                              </div>
-                              <div className="text-gray-500">{toSymbol}</div>
+                      <div className="flex justify-center my-2">
+                        <ArrowsUpDownIcon className="w-5 h-5 text-blue-400" />
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center">
+                          {toToken && (
+                            <img
+                              src={toToken.logo}
+                              alt={toToken.symbol}
+                              className="w-8 h-8 rounded-full mr-2"
+                            />
+                          )}
+                          <div>
+                            <div className="text-gray-900 text-xl">
+                              {(amount * Number(getExchangeRate())).toFixed(6)}
                             </div>
-                          </div>
-                          <div className="text-right text-gray-500">
-                            $
-                            {getUSDValue(
-                              amount * Number(getExchangeRate()),
-                              toToken
-                            )}
+                            <div className="text-gray-500">{toSymbol}</div>
                           </div>
                         </div>
-                      </div>
-
-                      <div className="text-sm text-gray-500 mb-4">
-                        <div>Exchange Rate:</div>
-                        <div>
-                          1 {fromSymbol} = {getExchangeRate()} {toSymbol}
+                        <div className="text-right text-gray-500">
+                          $
+                          {getUSDValue(
+                            amount * Number(getExchangeRate()),
+                            toToken
+                          )}
                         </div>
                       </div>
+                    </div>
 
-                      <button
-                        onClick={() => txBytes && onSwap(txBytes)}
-                        disabled={!txBytes}
-                        className="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg border border-blue-600 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Confirm Swap
-                      </button>
-                    </TabPanel>
-
-                    <TabPanel>
-                      <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-4">
-                        <JsonLogger logs={logs} />
+                    <div className="text-sm text-gray-500 mb-4">
+                      <div>Exchange Rate:</div>
+                      <div>
+                        1 {fromSymbol} = {getExchangeRate()} {toSymbol}
                       </div>
-                    </TabPanel>
-                  </>
-                )}
-              </TabPanels>
-            </TabGroup>
-          </div>
+                    </div>
+
+                    <button
+                      disabled={!txBytes}
+                      onClick={handleSwapTab}
+                      className="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg border border-blue-600 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Confirm Swap
+                    </button>
+                  </TabPanel>
+
+                  <TabPanel>
+                    <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-4">
+                      <JsonLogger logs={logs} />
+                    </div>
+                  </TabPanel>
+                </>
+              )}
+            </TabPanels>
+          </TabGroup>
         </div>
       </div>
     </Transition>

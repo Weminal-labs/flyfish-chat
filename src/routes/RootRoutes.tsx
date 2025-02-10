@@ -71,6 +71,10 @@ const rootRoutes: Array<RouteObject> = [
         element: <Navigate to="/conversation" replace />,
       },
       {
+        path: "/swap",
+        element: <SwapTab isOpen={true} fromSymbol="SUI" toSymbol="usdc" amount={1} onClose={() => {}} onSwap={() => {}} />,
+      },
+      {
         path: "*",
         element: <Navigate to="/conversation" replace />,
       },
