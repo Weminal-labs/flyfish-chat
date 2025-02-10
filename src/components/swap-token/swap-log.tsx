@@ -1,7 +1,7 @@
 // import { useState } from 'react'
 import { Transition } from '@headlessui/react'
 interface LogsProps {
-  logs: any[]
+  logs: string[]
 }
 
 const JsonLogger = ({ logs }: LogsProps) => {
@@ -9,7 +9,7 @@ const JsonLogger = ({ logs }: LogsProps) => {
     <div className="p-6 max-w-4xl mx-auto">
 
       <div className="space-y-3">
-        {logs.map((log, index) => (
+        {logs && logs.map((log, index) => (
           <Transition
             key={index}
             appear={true}
@@ -24,8 +24,7 @@ const JsonLogger = ({ logs }: LogsProps) => {
             <div className="p-4 bg-gray-800 rounded-lg group relative">
               <pre className="text-sm text-gray-100 overflow-x-auto">
                 <code>
-                  {/* {JSON.stringify(log, null, 2)} */}
-                  {/* {log} */}
+                  {JSON.stringify(log, null, 2)}
                 </code>
               </pre>
 

@@ -21,7 +21,7 @@ type SwapModalAgentProps = {
   toSymbol: string;
   amount: number;
   txBytes?: string;
-  onSwap: (txBytes: string) => void;
+  logs: string[];
 };
 
 export default function SwapTabContainer({
@@ -30,20 +30,13 @@ export default function SwapTabContainer({
   toSymbol,
   amount,
   txBytes,
+  logs,
 }: SwapModalAgentProps) {
   const { connected, signAndExecuteTransaction } = useWallet();
 
   const [fromToken, setFromToken] = React.useState<TokenData | null>(null);
   const [toToken, setToToken] = React.useState<TokenData | null>(null);
   const [loading, setLoading] = React.useState(false);
-
-  // dummy logs
-  const logs = [
-    {
-      message: "Sample log message",
-      details: { userId: 1, action: "login" },
-    },
-  ];
 
   React.useEffect(() => {
     const fetchTokensInfo = async () => {
