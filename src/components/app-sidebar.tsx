@@ -1,7 +1,12 @@
 import cn from "classnames";
 import { Link } from "react-router-dom";
-import { MessageCircle, Search, Settings } from "lucide-react";
-
+import {
+  MessageCircle,
+  FileBox,
+  Twitter,
+  MessageSquareShare,
+  QrCode 
+} from "lucide-react";
 // Import components
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import {
@@ -18,22 +23,32 @@ import {
 } from "src/components/ui/sidebar";
 import WalletInformationBox from "./wallet-information-box";
 
-// Import data
-import { AuthenticatedRoutesMetadata } from "src/routes/RootRoutes";
-
 // Menu items.
 const items = [
   {
     url: "/conversation",
     icon: MessageCircle,
+    label: "Conversation",
   },
   {
-    url: "/search",
-    icon: Search,
+    url: "https://weminal.craft.me/FlY_FISH_AI",
+    icon: FileBox,
+    label: "Documents",
   },
   {
-    url: "/settings",
-    icon: Settings,
+    url: "https://x.com/0xFlyFish_agent",
+    icon: Twitter,
+    label: "Twitter",
+  },
+  {
+    url: "https://www.canva.com/design/DAGee_3gdq0/QSytpzLfKWZ_e9gzJ0Ob9A/edit?utm_content=DAGee_3gdq0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton",
+    icon: MessageSquareShare,
+    label: "Pitchdesk",
+  },
+  {
+    url: "https://linktr.ee/flyfish_agent",
+    icon: QrCode,
+    label: "Linktree",
   },
 ];
 
@@ -64,25 +79,40 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Conversations</SidebarGroupLabel>
-          <SidebarGroupContent></SidebarGroupContent>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items
+                .filter((item) => item.label === "Conversation")
+                .map((item) => (
+                  <SidebarMenuItem key={item.label}>
+                    <SidebarMenuButton asChild>
+                      <Link to={item.url}>
+                        <item.icon className="w-4 h-4" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Porfolio</SidebarGroupLabel>
+          <SidebarGroupLabel>Portfolio</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem
-                  key={AuthenticatedRoutesMetadata.get(item.url)}
-                >
-                  <SidebarMenuButton asChild>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{AuthenticatedRoutesMetadata.get(item.url)}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {items
+                .filter((item) => item.label !== "Conversation")
+                .map((item) => (
+                  <SidebarMenuItem key={item.label}>
+                    <SidebarMenuButton asChild>
+                      <Link to={item.url} target="_blank">
+                        <item.icon className="w-4 h-4" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

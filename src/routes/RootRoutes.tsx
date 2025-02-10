@@ -27,7 +27,9 @@ import type { RouteObject } from "react-router-dom";
 export const AuthenticatedRoutesMetadata = new Map([
   ["/", import.meta.env.VITE_APP_NAME],
   ["/conversation", "Conversation"],
-  ["/search", "Search"],
+  ["/documents", "Documents"],
+  ["/twitter", "Twitter"],
+  ["/pitchdesk", "Pitchdesk"],
   ["/settings", "Settings"],
 ]);
 
@@ -72,7 +74,7 @@ const rootRoutes: Array<RouteObject> = [
       {
         path: "*",
         element: <Navigate to="/conversation" replace />,
-      },
+      }
     ],
   },
 ];

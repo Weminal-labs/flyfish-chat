@@ -34,3 +34,9 @@ export const ROUTES = {
   GameRooms: "/rooms",
   Settings: "/settings",
 };
+
+export const OtherRoutesMetadata = new Map([
+  ["/documents", "Documents"],
+  ["/pitchdesk", "Pitchdesk"],
+  ["/twitter", "Twitter"],
+]);

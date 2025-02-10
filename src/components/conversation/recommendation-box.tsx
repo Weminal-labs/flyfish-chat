@@ -1,8 +1,7 @@
 // Import components
 import Recommendations from "../recommendations";
-
-// Import state
 import { useConversationState } from "src/states/conversation";
+// Import state
 
 // Import types
 import type { RecommendationsBoxProps } from "./types";
