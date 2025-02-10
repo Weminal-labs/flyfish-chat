@@ -180,7 +180,7 @@ export class TokenAPI {
   }
 
   static async getTokenBySymbol(address: string) {
-    const url = `${import.meta.env.VITE_SUILEND_URL}/price`;
+    const url = `https://api.suilend.fi/proxy/price`;
     const params = new URLSearchParams({ address });
 
     try {
