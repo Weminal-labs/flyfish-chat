@@ -14,7 +14,6 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import MDContent from "../markdown";
-import Swap from "../swap-token/swap";
 import SwapTabContainer from "../swap-token/swap-tab-container";
 
 // Import types
@@ -62,8 +61,17 @@ const ConversationDialog = React.forwardRef<
   let ContentContainer;
 
   // If has action and it is `swap`
-  if (props.data.action === "SWAP_TOKEN") {
-    ContentContainer = <Swap />;
+  if (props.data.action === "SWAP_TOKEN" && props.data.params) {
+    const params = props.data.params;
+    const amount = parseFloat(params.amount);
+    const txBytes = params.txBytes;
+    console.log("txBytes - 1", txBytes);
+    const fromSymbol = params.from_token.symbol;
+    const toSymbol = params.destination_token.symbol;
+    
+
+    console.log("props.data.data", props.data);
+    ContentContainer = <SwapTabContainer isOpen={true} fromSymbol={fromSymbol} toSymbol={toSymbol} amount={amount} txBytes={txBytes} logs={params} />;
   } else {
     ContentContainer = <TextContentContainer {...props} isUser={isUser} />;
   }

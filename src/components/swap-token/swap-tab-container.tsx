@@ -21,7 +21,7 @@ type SwapModalAgentProps = {
   toSymbol: string;
   amount: number;
   txBytes?: string;
-  logs: string[];
+  logs: string;
 };
 
 export default function SwapTabContainer({
@@ -88,6 +88,10 @@ export default function SwapTabContainer({
   };
 
   const handleSwapTab = async () => {
+    if (!txBytes) {
+      alert("No transaction bytes found");
+      return;
+    }
     const tx = handleSwap(txBytes);
     console.log("tx", tx);
 
