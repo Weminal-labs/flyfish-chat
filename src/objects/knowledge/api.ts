@@ -1,4 +1,3 @@
-import { useWallet } from "@suiet/wallet-kit";
 import { API } from "src/api";
 
 // Import utils
@@ -19,13 +18,11 @@ export class KnowledgeAPI {
    * Use to get conversation dialogs
    * @returns
    */
-  static async getKnowledge() {
-    const { account } = useWallet();
 
+  static async getKnowledge(address: string) {
     try {
-      const data = await TuskyUtils.getFolderByUserAddress(
-        account?.address || ""
-      ); // input the user wallet address
+      const data = await TuskyUtils.getFolderByUserAddress(address); // input the user wallet address
+
       if (!data) return;
 
       if (typeof data != "string") {

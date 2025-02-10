@@ -408,7 +408,9 @@ export default function ConversationController() {
 
           const aiDiaLogs: any[] = [];
           for (const response of data) {
-            aiDiaLogs.push(ConversationUtils.createDialogFromResponse(response));
+            aiDiaLogs.push(
+              ConversationUtils.createDialogFromResponse(response)
+            );
           }
           // Update response status
           setConversationResponseStatus("DONE");
@@ -467,6 +469,18 @@ export default function ConversationController() {
             lastChildSpanContentElement
           );
         }
+      }
+
+      // Allow paste
+      if (e.ctrlKey && e.key === "v") {
+        navigator.clipboard.readText().then((data) => {
+          if (inputRef.current) {
+            const textNode = document.createTextNode(data);
+            inputRef.current.appendChild(textNode);
+            ConversationUIUtils.setCusorToContenteditable(textNode);
+          }
+        });
+        return;
       }
 
       // User presses normal key
