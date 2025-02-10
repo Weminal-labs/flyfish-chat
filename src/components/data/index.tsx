@@ -1,7 +1,6 @@
 import React from "react";
 import cn from "classnames";
 import { Sparkle } from "lucide-react";
-import ReactJson from "react-json-view";
 
 // Import components
 import { ScrollArea } from "../ui/scroll-area";
