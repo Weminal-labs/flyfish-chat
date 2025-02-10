@@ -5,14 +5,14 @@ import {
   TabList,
   TabPanels,
   TabPanel,
-  Dialog,
   Transition,
 } from "@headlessui/react";
 import { TokenData } from "../../types/token";
-import { TokenService } from "../../services/token.service";
 import { ArrowsUpDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useWallet } from "@suiet/wallet-kit";
-import ConnectWallet from "src/components/ui/connect-wallet";
+import { TokenAPI } from "src/objects/token/api";
+import JsonLogger from "./swap-log";
+import ConnectWallet from "../ui/connect-wallet";
 
 type SwapModalAgentProps = {
   isOpen: boolean;
@@ -33,17 +33,25 @@ export default function SwapTabContainer({
   onClose,
   onSwap,
 }: SwapModalAgentProps) {
-  const { connected } = useWallet();
+  const { connected, address } = useWallet();
 
   const [fromToken, setFromToken] = React.useState<TokenData | null>(null);
   const [toToken, setToToken] = React.useState<TokenData | null>(null);
   const [loading, setLoading] = React.useState(false);
 
+  // dummy logs
+  const logs = [
+    {
+      message: "Sample log message",
+      details: { userId: 1, action: "login" },
+    },
+  ];
+
   React.useEffect(() => {
     const fetchTokensInfo = async () => {
       setLoading(true);
       try {
-        const tokens = await TokenService.getTokenPrices();
+        const tokens = await TokenAPI.getTokenPrices();
 
         // Tìm token từ danh sách dựa vào symbol
         const from = tokens.find(
@@ -101,7 +109,7 @@ export default function SwapTabContainer({
       >
         <div className="fixed inset-0 bg-black bg-opacity-50" />
       </Transition.Child>
-      <div className="fixed inset-x-0 bottom-0 z-50 p-4 bg-gray-100 dark:bg-gray-900">
+      <div className=" inset-x-0 bottom-0 z-50 p-4 bg-gray-100 dark:bg-gray-900">
         <div className="w-full max-w-md mx-auto bg-white rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-left shadow-xl">
           {/* Header with close button */}
           <div className="flex justify-between items-center mb-4">
@@ -221,18 +229,7 @@ export default function SwapTabContainer({
 
                     <TabPanel>
                       <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <div className="flex items-center">
-                            <div>
-                              <div className="text-gray-900 text-xl">
-                                Transaction Logs
-                              </div>
-                              <div className="text-gray-500">
-                                Recent activity
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        <JsonLogger logs={logs} />
                       </div>
                     </TabPanel>
                   </>

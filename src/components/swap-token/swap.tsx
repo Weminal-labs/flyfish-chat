@@ -4,7 +4,6 @@ import ChooseTokenModal from "./choose-token-modal";
 import { useWallet } from "@suiet/wallet-kit";
 
 // Import components
-import SwapTabContainer from "./swap-tab-container";
 import ConnectWallet from "src/components/ui/connect-wallet";
 
 // Import objects
