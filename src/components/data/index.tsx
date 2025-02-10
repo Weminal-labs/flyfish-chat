@@ -84,11 +84,22 @@ function DataCard(props: DataCardProps) {
           </div>
           <span
             onClick={() => {
+              window.open(
+                `https://walruscan.com/testnet/blob/${props.data.uploadInfo.blobId}`,
+                "_blank"
+              );
+            }}
+            className="text-[#0057FF] max-w-[200px] text-[14px] underline font-[500] mt-[-8px] block cursor-pointer truncate overflow-hidden text-ellipsis"
+          >
+            BlobID: {props.data.uploadInfo.blobId || "Undefinded"}
+          </span>
+          <span
+            onClick={() => {
               window.open(props.data.url, "_blank");
             }}
-            className="text-gray-400 text-[16px] mt-[-8px ] block cursor-pointer  truncate"
+            className="text-gray-400 max-w-[364px] block text-[16px] mt-[-8px] cursor-pointer  "
           >
-            {props.data.url}
+            {props.data.text}
           </span>
 
           <div className="flex justify-end ">
@@ -100,22 +111,16 @@ function DataCard(props: DataCardProps) {
                 style={{
                   boxShadow: "-4px 18px 81px 18px rgba(0, 0, 0, 0.25)",
                 }}
-                className="absolute rounded-[10px]  bottom-[-100px] right-[50%] opacity-0 h-0 overflow-hidden w-0 group-hover:w-fit group-hover:h-fit  group-hover:block transition-all duration-300 ease-linear group-hover:opacity-100 group-hover:transition-all group-hover:duration-300 group-hover:ease-out"
+                className="absolute rounded-[14px] px-4   right-0 opacity-0 h-0 overflow-hidden w-[282px]  group-hover:h-[68px] flex items-center bg-white  group-hover:flex transition-all duration-300 ease-linear group-hover:opacity-100 group-hover:transition-all group-hover:duration-300 group-hover:ease-out"
               >
-                <ReactJson
-                  src={props.data.uploadInfo}
-                  theme="apathy:inverted"
-                  // type ThemeKeys = "pop" | "flat" | "brewer" | "apathy" | "apathy:inverted" | "ashes" | "bespin" | "bright:inverted" | "bright" | "chalk" | "codeschool" | "colors" | "eighties" | "embers" | "google" | ... 21 more ... | "twilight
-                  style={{
-                    width: "320px",
-                    height: "200px",
-                    overflow: "scroll",
-                    borderRadius: "10px",
-                    scrollbarWidth: "none",
-                    padding: "10px",
+                <span
+                  onClick={() => {
+                    window.open(props.data.url, "_blank");
                   }}
-                  collapsed={true}
-                />
+                  className="text-[#0057FF] text-[16px] block cursor-pointer hover:underline overflow-hidden text-ellipsis"
+                >
+                  {props.data.url}
+                </span>
               </div>
             </div>
           </div>

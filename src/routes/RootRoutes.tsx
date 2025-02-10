@@ -1,6 +1,5 @@
 // import React from "react";
 import { Outlet, useRoutes, Navigate } from "react-router-dom";
-import SwapTab from "src/components/swap-token/swap-tab-container";
 
 // Import components
 // import Signin from "src/pages/auth/components/sign-in";

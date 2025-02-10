@@ -207,11 +207,11 @@ export default function ConversationController() {
     handleBlurEvent,
     handleFocusEvent,
   } = React.useMemo(() => {
-    const _updateAIResponse = function (dialog: DialogType) {
+    const _updateAIResponse = function (dialogs: DialogType[]) {
       setConversationResponseStatus("WAITING");
       removeLastDialog();
       // Update dialog
-      addDialog(dialog);
+      addDialogs(dialogs);
     };
 
     /**
@@ -404,15 +404,19 @@ export default function ConversationController() {
           // 4. Create a new timeout for final change (shouldn't replace).
 
           // To do: create dialog for AI
-          const aiDialog = ConversationUtils.createDialogFromResponse(data[0]);
+          // const aiDialog = ConversationUtils.createDialogFromResponse();
 
+          const aiDiaLogs: any[] = [];
+          for (const response of data) {
+            aiDiaLogs.push(ConversationUtils.createDialogFromResponse(response));
+          }
           // Update response status
           setConversationResponseStatus("DONE");
 
           // To do: after 50ms, update conversation response status
           // This timeout will allow program do anything else, other jobs.
           const timeout = setTimeout(() => {
-            _updateAIResponse(aiDialog);
+            _updateAIResponse(aiDiaLogs);
           }, 50);
         }
       );
