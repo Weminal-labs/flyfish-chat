@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Tab,
   TabGroup,
@@ -7,40 +8,38 @@ import {
   Dialog,
   Transition,
 } from "@headlessui/react";
-import { Fragment, useEffect, useState } from "react";
-import { TokenData } from "../../../types/token";
-import { TokenService } from "../../../services/token.service";
+import { TokenData } from "../../types/token";
+import { TokenService } from "../../services/token.service";
 import { ArrowsUpDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useWallet } from "@suiet/wallet-kit";
 import ConnectWallet from "src/components/ui/connect-wallet";
 
-interface SwapModalAgentProps {
+type SwapModalAgentProps = {
   isOpen: boolean;
-  onClose: () => void;
   fromSymbol: string;
   toSymbol: string;
   amount: number;
   txBytes?: string;
+  onClose: () => void;
   onSwap: (txBytes: string) => void;
-}
+};
 
-export default function SwapModalAgent({
+export default function SwapTabContainer({
   isOpen,
-  onClose,
   fromSymbol,
   toSymbol,
   amount,
   txBytes,
+  onClose,
   onSwap,
 }: SwapModalAgentProps) {
   const { connected } = useWallet();
 
-  //== init state
-  const [fromToken, setFromToken] = useState<TokenData | null>(null);
-  const [toToken, setToToken] = useState<TokenData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [fromToken, setFromToken] = React.useState<TokenData | null>(null);
+  const [toToken, setToToken] = React.useState<TokenData | null>(null);
+  const [loading, setLoading] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchTokensInfo = async () => {
       setLoading(true);
       try {
@@ -90,10 +89,10 @@ export default function SwapModalAgent({
   // }
 
   return (
-    <Transition appear show={isOpen} as={Fragment}>
+    <Transition appear show={isOpen} as={React.Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
         <Transition.Child
-          as={Fragment}
+          as={React.Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"

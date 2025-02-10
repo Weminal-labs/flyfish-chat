@@ -16,7 +16,46 @@ export class ConversationUtils {
     return {
       id: "dialog-",
       sender,
-      message: input,
+      text: input,
     } as DialogType;
+  }
+
+  /**
+   * Use to check if response(s) have/has `SWAP_TOKEN` action
+   * @param response
+   * @returns
+   */
+  static isSwapAction(...responses: any[]): boolean {
+    return responses.some((response) => response.action === "SWAP_TOKEN");
+  }
+
+  /**
+   * Use to get swap information from response(s)
+   * @param responses
+   * @returns
+   */
+  static getSwapInfo(...responses: any[]): {
+    fromSymbol: string;
+    toSymbol: string;
+    amount: number;
+    txBytes?: string;
+  } | null {
+    const swapResponse = responses.find(
+      (response) => response.action === "SWAP_TOKEN"
+    );
+    console.log("PHAP-SWAP-RESPONSE", swapResponse);
+    const txResponse = responses.find((response) => response.params?.txBytes);
+    console.log("PHAP-TX-RESPONSE", txResponse);
+
+    if (txResponse?.content) {
+      return {
+        fromSymbol: txResponse.content.from_token,
+        toSymbol: txResponse.content.destination_token,
+        amount: txResponse.content.amount,
+        txBytes: txResponse?.params?.txBytes,
+      };
+    }
+
+    return null;
   }
 }

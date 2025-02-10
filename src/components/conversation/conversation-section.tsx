@@ -19,7 +19,7 @@ import type { ConversationSectionProps } from "./types";
 export default function ConversationSection({
   className,
 }: ConversationSectionProps) {
-  const { setDoesFirstFetch } = useConversationState();
+  const { setDoesFirstFetch, setAgentId } = useConversationState();
 
   const _className =
     "relative h-screen max-h-[calc(100dvh-45px-16px)] flex flex-col flex-1 pb-2";
@@ -34,7 +34,11 @@ export default function ConversationSection({
     //   setDialogs(dialogs);
     //   setDoesFirstFetch(true);
     // });
-    setDoesFirstFetch(true);
+    ConversationAPI.getAgentIds().then((data) => {
+      console.log("Agent:", data.agents[0]);
+      setAgentId(data.agents[0].id);
+      setDoesFirstFetch(true);
+    });
   }, []);
 
   return (

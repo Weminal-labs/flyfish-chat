@@ -1,9 +1,14 @@
 import cn from "classnames";
 
 export class ConversationUIUtils {
+  static KeywordAttributeKeys = {
+    Type: "data-type",
+    RequestAction: "data-request-action",
+  };
+
   static SuggestionCustomAttributeKeys = {
-    type: "data-type",
-    value: "data-suggestion-value",
+    Type: "data-type",
+    Value: "data-suggestion-value",
   };
 
   static Keywords = [
@@ -45,6 +50,23 @@ export class ConversationUIUtils {
   ];
 
   /**
+   * Use to check keyword of given value
+   * @param value
+   * @returns
+   */
+  static hasKeywordValue(value?: string | null) {
+    if (!value) return false;
+
+    for (const keyword of ConversationUIUtils.Keywords) {
+      if (keyword.value === value) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Use to get keyword metadata from regex of a keyword
    * @param regex
    * @returns
@@ -52,6 +74,18 @@ export class ConversationUIUtils {
   static getKeywordMetadata(regex: RegExp) {
     for (const keyword of ConversationUIUtils.Keywords) {
       if (keyword.regex === regex) {
+        return keyword;
+      }
+    }
+  }
+
+  /**
+   * Use to get full metadata of keyword with its value
+   * @param value
+   */
+  static getKeywordMetadataByValue(value: string) {
+    for (const keyword of ConversationUIUtils.Keywords) {
+      if (keyword.value === value) {
         return keyword;
       }
     }
@@ -116,12 +150,22 @@ export class ConversationUIUtils {
     const pseudoAfterClassName =
       "after:absolute after:inline-block after:w-auto after:left-[-50%] after:top-[-200%] after:content-['Press_Tab_to_apply'] after:font-normal after:text-sm after:text-primary after:z-20 after:whitespace-nowrap after:bg-white after:px-3 after:py-2 after:rounded-lg after:border";
 
+    // const keywordMetadata = ConversationUIUtils.getKeywordMetadataByValue(
+    //   keyword.toLowerCase()
+    // );
+
+    // Set attributes
     span.textContent = keyword;
     span.className = cn(
       spanClassName,
       pseudoBeforeClassName,
       pseudoAfterClassName
     );
+    span.setAttribute(
+      ConversationUIUtils.KeywordAttributeKeys.RequestAction,
+      keyword.toLowerCase()
+    );
+    span.setAttribute(ConversationUIUtils.KeywordAttributeKeys.Type, "keyword");
 
     // Set timeout
     setTimeout(() => {

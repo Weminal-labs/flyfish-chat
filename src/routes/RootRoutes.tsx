@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { Outlet, useRoutes, Navigate } from "react-router-dom";
 
 // Import components
@@ -8,7 +8,7 @@ import { Outlet, useRoutes, Navigate } from "react-router-dom";
 // import CompleteTasks from "src/pages/todo/components/complete-task";
 
 // Import hooks
-import { useAuth } from "src/hooks/use-auth";
+// import { useAuth } from "src/hooks/use-auth";
 
 // Import layouts
 import DashboardLayout from "src/layouts/dashboard";
@@ -23,7 +23,6 @@ import HomePage from "src/pages/home";
 
 // Import types
 import type { RouteObject } from "react-router-dom";
-import SwapPage from "src/components/web3/swap/swap-page";
 
 export const AuthenticatedRoutesMetadata = new Map([
   ["/", import.meta.env.VITE_APP_NAME],
@@ -67,14 +66,9 @@ const rootRoutes: Array<RouteObject> = [
         element: <HomePage />,
       },
       {
-        path: "/swap",
-        element: <SwapPage />,
-      },
-      {
         path: "/",
         element: <Navigate to="/conversation" replace />,
       },
-
     ],
   },
 ];
