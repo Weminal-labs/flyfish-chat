@@ -20,23 +20,29 @@ export class KnowledgeAPI {
    */
   static async getKnowledge() {
     try {
-      const data = await TuskyUtils.getFolderByUserAddress("0xetstssss"); // input the user wallet address
-
+      const data = await TuskyUtils.getFolderByUserAddress(
+        "0xb4b291607e91da4654cab88e5e35ba2921ef68f1b43725ef2faeae045bf5915d"
+      ); // input the user wallet address
+      console.log("sss", data);
       if (!data) return;
 
       if (typeof data != "string") {
         console.log(data);
-        const dataList = data.map((item: any) =>
-          // @ts-ignore
-          item.data.map((i) => {
-            return {
-              ...i,
-              uploadInfo: item,
-            };
-          })
-        );
-        console.log("item", dataList);
-        return dataList as any;
+        const dataList = data.map((item: any) => {
+          if (!item.data.msg) {
+            // @ts-ignore
+            return item.data.map((i) => {
+              return {
+                ...i,
+                uploadInfo: item,
+              };
+            });
+          } else {
+            console.log("item", item);
+          }
+        });
+        console.log(dataList.filter((i) => i));
+        return dataList.filter((i) => i) as any;
       }
     } catch (error: any) {
       console.error(error.message);

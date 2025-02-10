@@ -8,6 +8,7 @@ const tuskyAPIKey = import.meta.env.VITE_TUSKY_API_KEY;
 const defaultVaultId = import.meta.env.VITE_DEFAULT_VAULT_ID;
 const defaultParentId = import.meta.env.VITE_DEFAULT_PARENT_ID;
 
+console.log(tuskyURL, tuskyAPIKey, defaultVaultId, defaultParentId);
 //to check that user have been created a folder and create if not
 async function checkUserFolder(folderName: string) {
   if (!tuskyURL || !tuskyAPIKey)
@@ -17,7 +18,7 @@ async function checkUserFolder(folderName: string) {
     {
       method: "GET",
       headers: {
-        "Api-tuskyAPIKey": tuskyAPIKey,
+        "Api-Key": tuskyAPIKey,
       },
     }
   ).then((response) => response.json());
@@ -42,7 +43,7 @@ async function getFolderByUserAddress(userAddress: string) {
     {
       method: "GET",
       headers: {
-        "Api-tuskyAPIKey": tuskyAPIKey,
+        "Api-Key": tuskyAPIKey,
       },
     }
   ).then((response) => response.json());
@@ -82,7 +83,7 @@ async function uploadFile(
     endpoint: `${tuskyURL}/uploads`,
     retryDelays: [0, 3000, 5000, 10000, 20000],
     headers: {
-      "Api-tuskyAPIKey": tuskyAPIKey,
+      "Api-Key": tuskyAPIKey,
     },
     metadata: {
       filename: `${StringUtils.generateRandomString(10)}.json`,
@@ -115,7 +116,7 @@ async function createVault(vaultName: string) {
   const response = await fetch(`${tuskyURL}/vaults`, {
     method: "POST",
     headers: {
-      "Api-tuskyAPIKey": tuskyAPIKey,
+      "Api-Key": tuskyAPIKey,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -134,7 +135,7 @@ async function getDataByID(id: string) {
   }
   const response = await fetch(`${tuskyURL}/files/${id}/data`, {
     headers: {
-      "Api-tuskyAPIKey": tuskyAPIKey,
+      "Api-Key": tuskyAPIKey,
     },
   });
   return await response.json();
@@ -147,7 +148,7 @@ async function getDataFromVault(vaultId: string) {
   }
   const response = await fetch(`${tuskyURL}/files?vaultId=${vaultId}`, {
     headers: {
-      "Api-tuskyAPIKey": tuskyAPIKey,
+      "Api-Key": tuskyAPIKey,
     },
   });
   const data = await response.json();
@@ -160,7 +161,7 @@ async function getFileInfo(id: string) {
   }
   const response = await fetch(`${tuskyURL}/files/${id}`, {
     headers: {
-      "Api-tuskyAPIKey": tuskyAPIKey,
+      "Api-Key": tuskyAPIKey,
     },
   });
   return await response.json();
@@ -174,7 +175,7 @@ async function createFolder(folderName: string) {
     const response = await fetch(`${tuskyURL}/folders`, {
       method: "POST",
       headers: {
-        "Api-tuskyAPIKey": tuskyAPIKey,
+        "Api-Key": tuskyAPIKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
