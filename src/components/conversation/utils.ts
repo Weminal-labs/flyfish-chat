@@ -30,8 +30,9 @@ export class ConversationUIUtils {
     },
     {
       regex: /(deposit)$/i,
-      suggestion: "DONT KNOW YET",
-      value: "DEPOSIT_TOKEN",
+      suggestion:
+        "{{AMOUNT}} {{TOKEN}} in {{PROVIDER}} for address {{WALLET ADDRESS}}",
+      value: "DEPOSIT_TOKEN_SUILEND",
     },
     {
       regex: /(portfolio)$/i,

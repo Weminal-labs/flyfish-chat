@@ -1,20 +1,22 @@
 import React from "react";
-import {
-  Tab,
-  TabGroup,
-  TabList,
-  TabPanels,
-  TabPanel,
-} from "@headlessui/react";
-import { TokenData } from "../../types/token";
+import { Tab, TabGroup, TabList, TabPanels, TabPanel } from "@headlessui/react";
 import { ArrowsUpDownIcon } from "@heroicons/react/24/outline";
 import { useWallet } from "@suiet/wallet-kit";
-import { TokenAPI } from "src/objects/token/api";
-import JsonLogger from "./swap-log";
-import ConnectWallet from "../ui/connect-wallet";
-import handleSwap from "./sign-transaction";
 
-type SwapModalAgentProps = {
+// Import components
+import JsonLogger from "../log";
+import ConnectWallet from "../ui/connect-wallet";
+
+// Import objects
+import { TokenAPI } from "src/objects/token/api";
+
+// Import utils
+import { WalletUtils } from "src/utils/wallet";
+
+// Import types
+import { TokenData } from "src/types/token";
+
+type SwapTabContainerProps = {
   isOpen: boolean;
   fromSymbol: string;
   toSymbol: string;
@@ -30,7 +32,7 @@ export default function SwapTabContainer({
   amount,
   txBytes,
   logs,
-}: SwapModalAgentProps) {
+}: SwapTabContainerProps) {
   const { connected, signAndExecuteTransaction } = useWallet();
 
   const [fromToken, setFromToken] = React.useState<TokenData | null>(null);
@@ -86,18 +88,15 @@ export default function SwapTabContainer({
     return toValue.toFixed(decimals);
   };
 
-  const handleSwapTab = async () => {
+  const handleSwapTransaction = async () => {
     if (!txBytes) {
       alert("No transaction bytes found");
       return;
     }
-    const tx = handleSwap(txBytes);
-    console.log("tx", tx);
+    const txn = WalletUtils.createTransactionFromTxBytes(txBytes);
 
     await signAndExecuteTransaction({
-      transaction: tx,
-    }).then(async (result) => {
-      alert("Sui sent successfully");
+      transaction: txn,
     });
   };
 
@@ -110,9 +109,9 @@ export default function SwapTabContainer({
   // }
 
   return (
-    <div className="inset-x-0 bottom-0 z-50 p-4">
-      <div className=" inset-x-0 bottom-0 z-50 p-4">
-        <div className="w-full max-w-md mx-auto bg-white rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-left shadow-xl">
+    <div className="inset-x-0 bottom-0 z-50">
+      <div className=" inset-x-0 bottom-0 z-50">
+        <div className="w-full max-w-md bg-slate-50 rounded-lg border border-gray-200 dark:border-gray-700 p-6 text-left shadow-sm">
           <TabGroup>
             <TabList className="flex space-x-4 border-b border-gray-200 mb-4">
               <Tab
@@ -206,7 +205,7 @@ export default function SwapTabContainer({
 
                     <button
                       disabled={!txBytes}
-                      onClick={handleSwapTab}
+                      onClick={handleSwapTransaction}
                       className="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg border border-blue-600 hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Confirm Swap
