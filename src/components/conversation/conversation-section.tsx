@@ -19,27 +19,42 @@ import type { ConversationSectionProps } from "./types";
 export default function ConversationSection({
   className,
 }: ConversationSectionProps) {
-  const { setDialogs, setDoesFirstFetch } = useConversationState();
+  const { setDoesFirstFetch, setAgentId, addDialog } = useConversationState();
 
   const _className =
-    "relative max-h-[calc(100dvh-45px-16px)] flex flex-col flex-1 pb-2";
+    "relative h-screen max-h-[calc(100dvh-45px-16px)] flex flex-col flex-1 pb-2";
 
   React.useEffect(() => {
-    Promise.all([
-      ConversationAPI.getConversationDialogs(),
-      AtomaAPI.listModels(),
-    ]).then((values) => {
-      const [dialogs, models] = values;
-
-      // Set dialog
-      setDialogs(dialogs);
+    // Promise.all([
+    //   ConversationAPI.getConversationDialogs(),
+    //   AtomaAPI.listModels(),
+    // ]).then((values) => {
+    //   const [dialogs, models] = values;
+    //   // Set dialog
+    //   setDialogs(dialogs);
+    //   setDoesFirstFetch(true);
+    // });
+    ConversationAPI.getAgentIds().then((data) => {
+      setAgentId(data.agents[0].id);
       setDoesFirstFetch(true);
+      // Use to modify style of Swap box
+      // addDialog({
+      //   id: "dialog-01",
+      //   sender: "user",
+      //   text: "Hello",
+      // });
+      // addDialog({
+      //   id: "dialog-02",
+      //   sender: "ai",
+      //   text: "random",
+      //   action: "SWAP_TOKEN",
+      // });
     });
   }, []);
 
   return (
     <section className={cn(_className, className)}>
-      <div className="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
+      <div className="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] -z-10"></div>
       <RecommendationsBox />
       <ConversationDialogs />
       <ConversationController />

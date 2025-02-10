@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { Outlet, useRoutes, Navigate } from "react-router-dom";
 
 // Import components
@@ -8,7 +8,7 @@ import { Outlet, useRoutes, Navigate } from "react-router-dom";
 // import CompleteTasks from "src/pages/todo/components/complete-task";
 
 // Import hooks
-import { useAuth } from "src/hooks/use-auth";
+// import { useAuth } from "src/hooks/use-auth";
 
 // Import layouts
 import DashboardLayout from "src/layouts/dashboard";

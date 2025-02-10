@@ -18,6 +18,7 @@ type ConversationActions = {
   setDoesFirstRender(status?: boolean): void;
   setDialogs(dialogs: Array<DialogType>): void;
   setHistory(history: Array<any> | null): void;
+  setAgentId(agentId: string): void;
   addDialog(dialog: DialogType): void;
   addDialogs(dialogs: Array<DialogType>): void;
   removeLastDialog(): void;
@@ -27,6 +28,7 @@ type ConversationActions = {
 
 const initialState: ConversationState = {
   conversation: {
+    agentId: "",
     doesFirstRender: false,
     doesFirstFetch: false,
     responseStatus: "WAITING",
@@ -87,6 +89,21 @@ export const useConversationState = create<
           conversation: {
             ...conversation,
             dialogs,
+          },
+        };
+      });
+    },
+    setAgentId(agentId: string) {
+      set((state) => {
+        const conversation = state.conversation || {
+          ...initialState.conversation,
+        };
+
+        return {
+          ...state,
+          conversation: {
+            ...conversation,
+            agentId,
           },
         };
       });
@@ -161,8 +178,7 @@ export const useConversationState = create<
       }));
     },
     reset() {
-      set((state) => ({
-        ...state,
+      set(() => ({
         ...initialState,
       }));
     },

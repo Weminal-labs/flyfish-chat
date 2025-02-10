@@ -1,19 +1,29 @@
 export type UResponseStatus = "RESPONDING" | "WAITING" | "DONE";
 
-export type ChatBotResponseDataType = {
-  action: string;
-  params: any;
+export type ChatAIResponseDataType = {
+  user: string;
   text: string;
+  action?: string;
+  content?: {
+    from_token: string;
+    destination_token: string;
+    amount: number;
+  };
+  params?: {
+    txBytes: string;
+  };
 };
 
 export type DialogType = {
   id: string;
   sender: string;
-  message: string;
+  text: string;
+  action?: string;
   isBeingGenerated?: boolean;
 };
 
 export type ConversationType = {
+  agentId: string;
   doesFirstRender: boolean;
   doesFirstFetch: boolean;
   responseStatus: UResponseStatus;

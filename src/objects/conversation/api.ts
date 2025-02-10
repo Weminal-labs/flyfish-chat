@@ -6,10 +6,10 @@ import { OtherUtils } from "src/utils/other";
 
 // Import types
 // import type { AxiosHeaders } from "axios";
-import type { ChatBotResponseDataType } from "./types";
+import type { ChatAIResponseDataType } from "./types";
 
 const api = new API({
-  baseURL: import.meta.env.VITE_FLYFISH_BASE_URL,
+  baseURL: import.meta.env.VITE_API_SERVER_URL,
 });
 
 export class ConversationAPI {
@@ -19,7 +19,23 @@ export class ConversationAPI {
    */
   static async getConversationDialogs() {
     try {
-      const response = await api.get("/conversations/many.json");
+      // Test url
+      const url = "/conversations/many.json";
+      const response = await api.get(url);
+      return response.data as any;
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
+
+  /**
+   * Use to get agent ids
+   * @returns
+   */
+  static async getAgentIds() {
+    try {
+      const url = "/agents";
+      const response = await api.get(url);
       return response.data as any;
     } catch (error: any) {
       console.error(error.message);
@@ -30,15 +46,19 @@ export class ConversationAPI {
    * Use to list supported models
    * @returns
    */
-  static async askBot(input: string) {
+  static async askBot(input: string, agentId: string) {
     try {
-      const url = "/conversations/one.json";
-      const response = await api.post<any, ChatBotResponseDataType>(url, {
+      // Test url
+      // const url = "/conversations/one.json";
+      const url = `/${agentId}/message`;
+      console.log("Message URL:", url);
+      const response = await api.post<any, Array<ChatAIResponseDataType>>(url, {
         text: input,
+        user: "user",
       });
 
       // Simulate delay of response
-      await OtherUtils.wait(1000);
+      // await OtherUtils.wait(1000);
 
       return response.data;
     } catch (error: any) {
