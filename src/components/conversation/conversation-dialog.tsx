@@ -15,6 +15,7 @@ import {
 } from "../ui/tooltip";
 import MDContent from "../markdown";
 import Swap from "../swap-token/swap";
+import SwapTabContainer from "../swap-token/swap-tab-container";
 
 // Import types
 import type {
@@ -24,7 +25,7 @@ import type {
 
 function TextContentContainer(props: TextContentContainerProps) {
   const textContainerClassName =
-    "w-full border break-words rounded-lg px-2 py-3 hover:ring-2";
+    "w-full border break-words rounded-lg shadow-sm px-2 py-3 hover:ring-2";
 
   return (
     <div
@@ -61,7 +62,7 @@ const ConversationDialog = React.forwardRef<
   let ContentContainer;
 
   // If has action and it is `swap`
-  if (props.data.action === "swap") {
+  if (props.data.action === "SWAP_TOKEN") {
     ContentContainer = <Swap />;
   } else {
     ContentContainer = <TextContentContainer {...props} isUser={isUser} />;

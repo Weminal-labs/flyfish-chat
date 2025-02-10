@@ -1,7 +1,7 @@
 import { ConversationConstants } from "./constant";
 
 // Import types
-import type { DialogType } from "./types";
+import type { DialogType, ChatAIResponseDataType } from "./types";
 
 export class ConversationUtils {
   /**
@@ -17,6 +17,20 @@ export class ConversationUtils {
       id: "dialog-",
       sender,
       text: input,
+    } as DialogType;
+  }
+
+  /**
+   * Use to transform AI response to dialog
+   * @param dataResponse
+   */
+  static createDialogFromResponse(dataResponse: ChatAIResponseDataType) {
+    delete (dataResponse as any).user;
+
+    return {
+      ...dataResponse,
+      id: "dialog-",
+      sender: ConversationConstants.Senders.AI,
     } as DialogType;
   }
 
