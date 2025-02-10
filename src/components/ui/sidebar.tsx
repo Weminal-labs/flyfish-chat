@@ -1,7 +1,5 @@
 import * as React from "react";
 import {
-  Link,
-  useResolvedPath,
   useLocation,
   useNavigate,
 } from "react-router-dom";
