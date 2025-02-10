@@ -48,7 +48,7 @@ function DataCategory(props: DataCategoryProps) {
 }
 
 function DataCard(props: DataCardProps) {
-  const _className = "w-full rounded-[16px] border px-6 py-4 mb-3 hover:ring-2";
+  const _className = "w-full rounded-[16px] border mb-3 hover:ring-2";
   const color = React.useMemo(() => DataUIUtils.getColorForDataCard(), []).join(
     ","
   );
@@ -60,62 +60,67 @@ function DataCard(props: DataCardProps) {
         /* backgroundColor: `rgba(${color}, 0.2)`, */ color: `rgb(${color})`,
       }}
     >
-      <div className="mb-3 flex gap-4 flex-col">
-        <span
-          className={`block bg-[#1e6bff] text-white text-[16px] px-3 py-1 rounded-[20px] w-fit`}
-        >
-          Positive
-        </span>
-        <div className="flex gap-2 items-center">
-          <img
-            src={props.data.authorImg}
-            className="block rounded-[50%] w-[48px] h-[48px]"
-            alt=""
-          />
-          <div className="">
-            <span className="font-[400] text-xl block">
-              {props.data.authorFullname}
-            </span>
-            <span className="mt-[-4px] text-[16px] block">
-              {props.data.authorUsername}
-            </span>
-          </div>
-        </div>
-        <span
-          onClick={() => {
-            window.open(props.data.url, "_blank");
-          }}
-          className="text-gray-400 text-xl block cursor-pointer  truncate"
-        >
-          {props.data.url}
-        </span>
-
-        <div className="flex justify-end ">
-          <div className="w-fit relative group">
-            <span className="text-gray-400  underline font-[500] hover:cursor-pointer">
-              DETAIL
-            </span>
-            <div className="absolute bottom-[-100px] right-[50%] hidden opacity-0 group-hover:opacity-100 group-hover:block transition-all duration-300 ease-linear">
-              <ReactJson
-                src={props.data}
-                theme="apathy:inverted"
-                // type ThemeKeys = "pop" | "flat" | "brewer" | "apathy" | "apathy:inverted" | "ashes" | "bespin" | "bright:inverted" | "bright" | "chalk" | "codeschool" | "colors" | "eighties" | "embers" | "google" | ... 21 more ... | "twilight
-                style={{
-                  width: "320px",
-                  height: "240px",
-                  overflow: "scroll",
-                  borderRadius: "10px",
-                  scrollbarWidth: "none",
-                  padding: "10px",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                }}
-                collapsed={true}
-              />
-              ;
+      <div className="py-4 px-6">
+        <div className="mb-3 flex gap-4 flex-col">
+          <span
+            className={`block bg-[#1e6bff] text-white text-[14px] px-3 py-1 rounded-[20px] w-fit`}
+          >
+            Positive
+          </span>
+          <div className="flex gap-2 items-center">
+            <img
+              src={props.data.authorImg}
+              className="block rounded-[50%] w-[34px] h-[34px]"
+              alt=""
+            />
+            <div className="">
+              <span className="font-[400] text-[16px] block">
+                {props.data.authorFullname}
+              </span>
+              <span className="mt-[-4px] text-[12px] block">
+                {props.data.authorUsername}
+              </span>
             </div>
           </div>
+          <span
+            onClick={() => {
+              window.open(props.data.url, "_blank");
+            }}
+            className="text-gray-400 text-[16px] mt-[-8px ] block cursor-pointer  truncate"
+          >
+            {props.data.url}
+          </span>
+
+          <div className="flex justify-end ">
+            <div className="w-fit relative group">
+              <span className="text-[#919191] text-[14px]  group-hover:underline font-[700] hover:cursor-pointer">
+                DETAIL
+              </span>
+              <div
+                style={{
+                  boxShadow: "-4px 18px 81px 18px rgba(0, 0, 0, 0.25)",
+                }}
+                className="absolute rounded-[10px]  bottom-[-100px] right-[50%] opacity-0 h-0 overflow-hidden w-0 group-hover:w-fit group-hover:h-fit  group-hover:block transition-all duration-300 ease-linear group-hover:opacity-100 group-hover:transition-all group-hover:duration-300 group-hover:ease-out"
+              >
+                <ReactJson
+                  src={props.data.uploadInfo}
+                  theme="apathy:inverted"
+                  // type ThemeKeys = "pop" | "flat" | "brewer" | "apathy" | "apathy:inverted" | "ashes" | "bespin" | "bright:inverted" | "bright" | "chalk" | "codeschool" | "colors" | "eighties" | "embers" | "google" | ... 21 more ... | "twilight
+                  style={{
+                    width: "320px",
+                    height: "200px",
+                    overflow: "scroll",
+                    borderRadius: "10px",
+                    scrollbarWidth: "none",
+                    padding: "10px",
+                  }}
+                  collapsed={true}
+                />
+              </div>
+            </div>
+          </div>
+          {/* <p>{props.data.text}</p> */}
         </div>
-        {/* <p>{props.data.text}</p> */}
       </div>
       {/* <div>
         <p className="font-bold">Categories</p>

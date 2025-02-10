@@ -23,4 +23,5 @@ export type KnowledgeType = {
   authorUsername: string;
   authorImg: string;
   url: string;
+  uploadInfo: any;
 };
