@@ -5,6 +5,7 @@ import {
   FileBox,
   Twitter,
   MessageSquareShare,
+  Youtube,
   QrCode 
 } from "lucide-react";
 // Import components
@@ -44,6 +45,10 @@ const items = [
     url: "https://www.canva.com/design/DAGee_3gdq0/QSytpzLfKWZ_e9gzJ0Ob9A/edit?utm_content=DAGee_3gdq0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton",
     icon: MessageSquareShare,
     label: "Pitchdesk",
+  },{
+    url: "https://www.youtube.com/watch?v=wqBZD4jdMro",
+    icon: Youtube,
+    label: "Youtube",
   },
   {
     url: "https://linktr.ee/flyfish_agent",
