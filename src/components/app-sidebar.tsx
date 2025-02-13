@@ -32,6 +32,11 @@ const items = [
     label: "Conversation",
   },
   {
+    url: "/graph",
+    icon: MessageCircle,
+    label: "Graph",
+  },
+  {
     url: "https://weminal.craft.me/FlY_FISH_AI",
     icon: FileBox,
     label: "Documents",
@@ -87,7 +92,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items
-                .filter((item) => item.label === "Conversation")
+                .filter((item) => item.label === "Conversation" ||item.label === "Graph")
                 .map((item) => (
                   <SidebarMenuItem key={item.label}>
                     <SidebarMenuButton asChild>
@@ -107,7 +112,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items
-                .filter((item) => item.label !== "Conversation")
+                .filter((item) => item.label !== "Conversation" && item.label !== "Graph")
                 .map((item) => (
                   <SidebarMenuItem key={item.label}>
                     <SidebarMenuButton asChild>
