@@ -6,7 +6,8 @@ import {
   Twitter,
   MessageSquareShare,
   Youtube,
-  QrCode 
+  QrCode, 
+  ChartNetwork
 } from "lucide-react";
 // Import components
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
@@ -33,7 +34,7 @@ const items = [
   },
   {
     url: "/graph",
-    icon: MessageCircle,
+    icon: ChartNetwork ,
     label: "Graph",
   },
   {
