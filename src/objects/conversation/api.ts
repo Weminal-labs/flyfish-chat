@@ -36,6 +36,7 @@ export class ConversationAPI {
     try {
       const url = "/agents";
       const response = await api.get(url);
+      console.log("agent info:", response);
       return response.data as any;
     } catch (error: any) {
       console.error(error.message);
@@ -62,7 +63,8 @@ export class ConversationAPI {
 
       return response.data;
     } catch (error: any) {
-      console.error(error.message);
+      // console.error(error.message);
+      console.log("AI error:", error);
     }
   }
 }

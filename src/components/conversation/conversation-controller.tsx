@@ -395,7 +395,17 @@ export default function ConversationController() {
       // Send request
       ConversationAPI.askBot(userDialog.text, conversation.agentId).then(
         (data) => {
-          if (!data) return;
+          console.log("AI-RESPONSE", data);
+          if (!data) {
+            const aiDialog = ConversationUtils.createDialog(
+              "I'm sorry, I'm not able to process your request. Please try again.",
+              ConversationConstants.Senders.AI
+            );
+
+            _updateAIResponse([aiDialog]);
+            setConversationResponseStatus("WAITING");
+            return;
+          }
 
           // Frontend gets response from AI, there are many steps to do:
           // 1. Create dialog for AI (shouldn't replace).

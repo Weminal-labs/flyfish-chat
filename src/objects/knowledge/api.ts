@@ -26,7 +26,7 @@ export class KnowledgeAPI {
       if (!data) return;
 
       if (typeof data != "string") {
-        console.log(data);
+        // console.log("data:", data);
         const dataList = data.map((item: any) => {
           if (!item.data.msg) {
             // @ts-ignore
@@ -40,7 +40,7 @@ export class KnowledgeAPI {
             console.log("item", item);
           }
         });
-        console.log(dataList.filter((i) => i));
+        // console.log(dataList.filter((i) => i));
         return dataList.filter((i) => i) as any;
       }
     } catch (error: any) {

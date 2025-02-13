@@ -22,7 +22,7 @@ async function checkUserFolder(folderName: string) {
       },
     }
   ).then((response) => response.json());
-  console.log(folders);
+  // console.log(folders);
   const folder = folders.items.find((folder: any) => folder.name == folderName);
   if (folder) {
     return folder;
@@ -37,7 +37,7 @@ async function getFolderByUserAddress(userAddress: string) {
   if (!tuskyURL || !tuskyAPIKey)
     throw new Error("tuskyURL or tuskyAPIKey is not set");
   const folder = await checkUserFolder(userAddress);
-  console.log(folder);
+  // console.log(folder);
   const response = await fetch(
     `${tuskyURL}/files?vaultId=${defaultVaultId}&parentId=${folder.id}`,
     {
@@ -73,7 +73,7 @@ async function uploadFile(
     throw new Error("tuskyURL or tuskyAPIKey is not set");
   }
   const folder = await checkUserFolder(folderName);
-  console.log(folder);
+  // console.log(folder);
   const jsonBlob = new Blob([JSON.stringify(jsonObject)], {
     type: "application/json",
   });

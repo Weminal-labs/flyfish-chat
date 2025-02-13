@@ -14,7 +14,7 @@ export class ConversationUIUtils {
   static Keywords = [
     {
       regex: /(swap)$/i,
-      suggestion: "{{AMOUNT}} of SUI to USDC for address {{WALLET ADDRESS}}",
+      suggestion: "AMOUNT of SUI to USDC for address {{WALLET ADDRESS}}",
       value: "SWAP_TOKEN",
     },
     {
@@ -24,12 +24,12 @@ export class ConversationUIUtils {
     },
     {
       regex: /(transfer)$/i,
-      suggestion: "{{AMOUNT}} to address {{WALLET ADDRESS}}",
+      suggestion: "AMOUNT to address {{WALLET ADDRESS}}",
       value: "SEND_TOKEN",
     },
     {
       regex: /(deposit)$/i,
-      suggestion: "{{AMOUNT}} SUI in suilend for address {{WALLET ADDRESS}}",
+      suggestion: "AMOUNT SUI in suilend for address {{WALLET ADDRESS}}",
       value: "DEPOSIT_TOKEN_SUILEND",
     },
     {
@@ -39,12 +39,12 @@ export class ConversationUIUtils {
     },
     {
       regex: /(repay)$/i,
-      suggestion: "{{AMOUNT}} to address {{WALLET ADDRESS}}",
+      suggestion: "AMOUNT to address {{WALLET ADDRESS}}",
       value: "REPAY_TOKEN",
     },
     {
       regex: /(withdraw)$/i,
-      suggestion: "{{AMOUNT}} from my wallet address {{WALLET ADDRESS}}",
+      suggestion: "AMOUNT from my wallet address {{WALLET ADDRESS}}",
       value: "WITHDRAW_TOKEN_SUILEND",
     },
   ];
