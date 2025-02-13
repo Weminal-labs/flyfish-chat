@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+
 interface ImportMetaEnv {
   readonly VITE_APP_NAME: string;
   readonly VITE_API_SERVER_URL: string;
@@ -11,5 +12,10 @@ interface ImportMetaEnv {
   readonly VITE_TUSKY_API_KEY: string;
   readonly VITE_DEFAULT_VAULT_ID: string;
   readonly VITE_DEFAULT_PARENT_ID: string;
+  // readonly VITE_API_BASE_URL: string;
   // more env variables...
 }
+
+// interface ImportMeta {
+//   readonly env: ImportMetaEnv
+// }
