@@ -127,7 +127,7 @@ export default function GraphPage() {
       <div className="flex-1 border rounded-lg shadow-sm p-4 z-10 overflow-y-scroll">
         {selectedNode ? (
           <div>
-             <h2 className="text-xl font-bold mb-4">Node: {selectedNode.id}</h2>
+             <h2 className="text-lg font-bold mb-4 text-left">Node: {selectedNode.id}</h2>
       
       {/* Manually List All Fields */}
       <div className="space-y-4 ">

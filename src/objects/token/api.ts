@@ -1,14 +1,35 @@
-import { API } from "src/api";
+import axios from "axios";
+import type { TokenData } from "./types";
 
 // Import utils
 // import { APIUtils } from "src/utils/api";
-import { OtherUtils } from "src/utils/other";
 
-// Import types
-// import type { AxiosHeaders } from "axios";
-import type { TokenData } from "./types";
+interface Token {
+  coin_type: string;
+  symbol: string;
+  name: string;
+  logo_url: string;
+  decimals: number;
+}
 
-const api = new API();
+interface TokenBalanceResponse {
+  status: boolean;
+  data: Array<{
+    coin_type: string;
+    balance: string;
+  }>;
+}
+
+interface PriceResponse {
+  status: boolean;
+  data: {
+    value: number;
+    priceChange24h?: number;
+    balance?: string;
+    decimals: number;
+  };
+}
+
 let tokenPricesCache: TokenData[] | null = null;
 let lastFetchTime = 0;
 const CACHE_DURATION = 90000; // 90 giây
@@ -33,7 +54,7 @@ export class TokenAPI {
       ]);
 
       // Lấy danh sách các token khác
-      const coinsResponse = await api.get<any>(url, { params });
+      const coinsResponse = await axios.get<any>(url, { params });
       const tokens = coinsResponse.data.data.list;
 
       // Tạo Set để theo dõi các coin_type đã xử lý
@@ -43,11 +64,10 @@ export class TokenAPI {
       ]);
 
       // Lấy giá cho tất cả token cùng lúc
-      const tokenPromises = tokens.map(async (token: any) => {
+      const tokenPromises = tokens.map(async (token: Token) => {
         if (processedCoinTypes.has(token.coin_type)) {
           return null;
         }
-        // Thêm coin_type vào Set( mục đích để tránh việc lấy giá token trùng lặp)
         processedCoinTypes.add(token.coin_type);
         return TokenAPI.getTokenPrice(token);
       });
@@ -58,7 +78,7 @@ export class TokenAPI {
       // Lọc và sắp xếp tokens
       const filteredTokens = tokensWithPrices
         .filter((token): token is TokenData => token !== null)
-        .sort((a, b) => a.symbol.localeCompare(b.symbol));
+        .sort((a: TokenData, b: TokenData) => a.symbol.localeCompare(b.symbol));
 
       // Thêm SUI và mSEND vào đầu danh sách
       tokenPricesCache = [suiToken, suilendToken, ...filteredTokens];
@@ -79,24 +99,21 @@ export class TokenAPI {
   }
 
   // Cập nhật hàm lấy balance
-  static async getTokenBalance(
-    address: string,
-    coinType: string
-  ): Promise<string> {
+  static async getTokenBalance(address: string, coinType: string): Promise<string> {
     const url = `${import.meta.env.VITE_SWAP_SERVER_URL}/allTokens`;
     const params = new URLSearchParams({ address });
 
     try {
-      const response = await api.get<any>(url, { params });
+      const response = await axios.get<{ data: TokenBalanceResponse }>(url, { params });
+      const responseData = response.data.data;
 
-      if (response.data.status === false) {
-        console.error("Error fetching balance:", response.data.data);
+      if (responseData.status === false) {
+        console.error("Error fetching balance:", responseData.data);
         return "0";
       }
 
-      // Tìm token balance trong danh sách trả về
-      const tokenBalance = response.data.data.find(
-        (token: any) => token.coin_type === coinType
+      const tokenBalance = responseData.data.find(
+        (token) => token.coin_type === coinType
       );
 
       if (tokenBalance && tokenBalance.balance) {
@@ -115,8 +132,8 @@ export class TokenAPI {
     const params = new URLSearchParams({ address: coinType });
 
     try {
-      const priceResponse = await api.get<any>(url, { params });
-      const priceData = priceResponse.data.data;
+      const priceResponse = await axios.get<{ data: PriceResponse }>(url, { params });
+      const priceData = priceResponse.data.data.data;
 
       return priceData?.value;
     } catch (error) {
@@ -125,12 +142,11 @@ export class TokenAPI {
     }
   }
 
-  static async getTokenPrice(token: any): Promise<TokenData | null> {
+  static async getTokenPrice(token: Token): Promise<TokenData | null> {
     const url = `${import.meta.env.VITE_SUILEND_URL}/price`;
     const params = new URLSearchParams({ address: token.coin_type });
-
     try {
-      const priceResponse = await api.get<any>(url, { params });
+      const priceResponse = await axios.get<{ data: PriceResponse }>(url, { params });
       const priceData = priceResponse.data.data;
 
       return {
@@ -180,11 +196,11 @@ export class TokenAPI {
   }
 
   static async getTokenBySymbol(address: string) {
-    const url = `https://api.suilend.fi/proxy/price`;
+    const url = `${import.meta.env.VITE_SUILEND_URL}/price`;
     const params = new URLSearchParams({ address });
 
     try {
-      const response = await api.get<any>(url, { params });
+      const response = await axios.get(url, { params });
       return response.data.data;
     } catch (error) {
       console.error(`Error fetching token for ${address}:`, error);
