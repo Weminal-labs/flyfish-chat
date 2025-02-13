@@ -2,15 +2,16 @@
 import RootRoutes from "./routes/RootRoutes";
 import { SuietWallet, SuiWallet, WalletProvider } from "@suiet/wallet-kit";
 import './wallet-custom.css';
+import { CursorEffect } from './components/ui/cursor-effect';
 
 function App() {
   return (
-    <WalletProvider defaultWallets={[
-      SuietWallet,
-      SuiWallet
-    ]}>
-      <RootRoutes />
-    </ WalletProvider>
+    <div className="relative min-h-screen">
+      <CursorEffect />
+      <WalletProvider defaultWallets={[SuietWallet, SuiWallet]}>
+        <RootRoutes />
+      </WalletProvider>
+    </div>
   );
 }
 
