@@ -88,9 +88,9 @@ export default function GraphPage() {
         .filter((item: any) => item.parentId)
         .map((item: any) => ({
           id: `${item.parentId}->${item.id}`,
-          source: item.parentId,
-          target: item.id,
-          label: "Contains",
+          source: item.id,
+          target: "1a8c7573-5ab4-4096-9e28-65ffac188a38",
+          label: "",
         }));
 
       // Đặt dữ liệu vào state
@@ -127,7 +127,7 @@ export default function GraphPage() {
       <div className="flex-1 border rounded-lg shadow-sm p-4 z-10 overflow-y-scroll">
         {selectedNode ? (
           <div>
-             <h2 className="text-xl font-bold mb-4">Node: {selectedNode.id}</h2>
+             <h2 className="text-lg font-bold mb-4 text-left">Node: {selectedNode.id}</h2>
       
       {/* Manually List All Fields */}
       <div className="space-y-4 ">
