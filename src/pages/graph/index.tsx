@@ -88,9 +88,9 @@ export default function GraphPage() {
         .filter((item: any) => item.parentId)
         .map((item: any) => ({
           id: `${item.parentId}->${item.id}`,
-          source: item.parentId,
-          target: item.id,
-          label: "Contains",
+          source: item.id,
+          target: "1a8c7573-5ab4-4096-9e28-65ffac188a38",
+          label: "",
         }));
 
       // Đặt dữ liệu vào state
