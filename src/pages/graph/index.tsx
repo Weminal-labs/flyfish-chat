@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
 interface nodeType {
     id: string;
@@ -19,7 +19,10 @@ interface nodeType {
   }
 export default function GraphPage() {
   const [selectedNode, setSelectedNode] = useState<nodeType|null>(null);
-
+  useEffect(()=>{
+    console.log("Select")
+    console.log(selectedNode)
+  },[selectedNode])
   const graphData:graphDataType = {
     nodes: [
       { id: 'parent', name: 'Node Cha', color: '#ff4444', type: 'parent', description: 'Đây là node cha chính' },
@@ -55,7 +58,7 @@ export default function GraphPage() {
     <div className="flex w-full h-[600px] gap-4">
       {/* Cột trái: Graph */}
       <div className="flex-1 border rounded-lg shadow-sm">
-        <ForceGraph2D
+        <ForceGraph2D 
           graphData={graphData}
           nodeColor={node => node.color}
           nodeRelSize={8}
@@ -64,11 +67,12 @@ export default function GraphPage() {
           d3VelocityDecay={0.1}
           onNodeClick={handleNodeClick}
           onNodeHover={handleNodeHover}
+          width={800}
         />
       </div>
 
       {/* Cột phải: Thông tin chi tiết */}
-      <div className="w-1/3 p-4 border rounded-lg shadow-sm">
+      <div className="flex-1 border rounded-lg shadow-sm">
         {selectedNode ? (
           <div>
             <h2 className="text-xl font-bold mb-4">{selectedNode.name}</h2>
